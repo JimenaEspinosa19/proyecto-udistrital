@@ -4,12 +4,35 @@ import { LoginComponent } from './components/login/login.component';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AuthGuard } from './shared/guards/auth.guard';
+import { MedicamentosComponent } from './components/medicamentos/medicamentos.component';
+import { EncabezadoComponent } from './components/encabezado/encabezado.component';
+import { ReservasComponent } from './components/reservas/reservas.component';
+import { RegistrarComponent } from './components/registrar/registrar.component';
+import { InventariosComponent } from './components/inventarios/inventarios.component';
+import { PerfilComponent } from './components/perfil/perfil.component';
+
+
+
 
 const routes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' }, // Redirige a 'login' al abrir la aplicación
   { path: 'login', component: LoginComponent },
   { path: 'sign-up', component: SignUpComponent },
-  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] }
+  { 
+    path: '', 
+    component: EncabezadoComponent, 
+    children: [
+      { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
+      { path: 'medicamentos', component: MedicamentosComponent, canActivate: [AuthGuard] },
+      { path: 'reservas', component: ReservasComponent,canActivate: [AuthGuard] },
+      { path: 'registrar', component: RegistrarComponent,canActivate: [AuthGuard] },
+      { path: 'inventarios', component: InventariosComponent,canActivate: [AuthGuard] },
+      { path: 'perfil', component: PerfilComponent,canActivate: [AuthGuard] },
+
+      // Otras rutas para componentes que necesiten el encabezado
+    ]
+  },
+
 ];
 
 @NgModule({

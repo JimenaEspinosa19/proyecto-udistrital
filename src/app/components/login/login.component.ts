@@ -8,8 +8,14 @@ import { AuthService } from 'src/app/shared/services/auth.service';
 })
 export class LoginComponent {
 
+  isLoginPage: boolean = true;
   constructor(private authService: AuthService) {
 
+  }
+
+  login() {
+
+    this.isLoginPage = false; 
   }
 
   logIn(email: string, password: string) {

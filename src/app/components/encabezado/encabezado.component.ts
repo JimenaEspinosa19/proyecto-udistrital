@@ -2,14 +2,13 @@ import { Component } from '@angular/core';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { Router } from '@angular/router';
 
-
 @Component({
-  selector: 'app-dashboard',
+  selector: 'app-encabezado',
 
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  templateUrl: './encabezado.component.html',
+  styleUrls: ['./encabezado.component.css']
 })
-export class DashboardComponent {
+export class EncabezadoComponent {
 
   constructor(private authService: AuthService, private router: Router) {}
 

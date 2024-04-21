@@ -8,12 +8,17 @@ import { Router } from '@angular/router';
 })
 export class AuthService {
 
+  
+
   userData: any;
 
   constructor(
     private firebaseAuthenticationService: AngularFireAuth,
     private router: Router,
     private ngZone: NgZone
+
+
+    
   ) {
     // OBSERVER save user in localStorage (log-in) and setting up null when log-out
     this.firebaseAuthenticationService.authState.subscribe((user) => {
@@ -79,5 +84,7 @@ export class AuthService {
       this.router.navigate(['login']);
     })
   }
+
+  
 
 }

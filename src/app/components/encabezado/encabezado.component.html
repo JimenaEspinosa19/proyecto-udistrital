@@ -1,0 +1,63 @@
+<mat-toolbar color="accent">DispenAPP
+  
+</mat-toolbar>
+
+<mat-sidenav-container>
+      <mat-divider></mat-divider>
+    <mat-sidenav mode="side" opened="true">
+
+      <div class="avatar-container">
+        <img class="avatar mat-elevation-z8" src="../../../assets/images/perfil.png" alt="Logo">
+      </div>
+  
+    
+      <h4 class="name">Usuario</h4>
+      <mat-divider></mat-divider>
+      <button mat-button class="menu-button" routerLink="/dashboard">
+        <mat-icon>home</mat-icon>
+        <span>Inicio</span>
+      </button>
+      
+        <button mat-button class="menu-button" routerLink="/perfil">
+          <mat-icon>person</mat-icon>
+          <span>Perfil</span>
+        </button>
+
+      
+      <button mat-button class="menu-button" routerLink="/medicamentos">
+        <mat-icon>search</mat-icon>
+        <span>Busqueda</span>
+      </button>
+
+      <button mat-button class="menu-button" routerLink="/reservas">
+        <mat-icon>book</mat-icon>
+        <span>Reservas</span>
+      </button>
+
+      <button mat-button class="menu-button" routerLink="/registrar">
+        <mat-icon>edit</mat-icon>
+        <span>Registrar</span>
+      </button>
+
+      <button mat-button class="menu-button" routerLink="/inventarios">
+        <mat-icon>inventory</mat-icon>
+        <span>Inventario</span>
+      </button>
+
+      <mat-divider></mat-divider>
+
+     
+      <button mat-button class="menu-button" (click)="logOut()">
+        <mat-icon>exit_to_app</mat-icon>
+        <span>Salir</span>
+      </button>  
+   
+
+    </mat-sidenav>
+    
+    <mat-sidenav-content>
+      
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+    
+  </mat-sidenav-container>
