@@ -1,6 +1,40 @@
+<div class="content mat-elevation-z8" style="color: rgb(4, 4, 4); background-color: #f3ecec;">
 
-
-        
-    <div class="content mat-elevation-z8" style="color: rgb(4, 4, 4); background-color: #f6eeee;">
-        <div>Reservass</div>
+  <div class="max-w-md mx-auto bg-white p-10 shadow-md rounded-md">
+    <h2 class="text-xl font-semibold mb-4">Reserva de Medicamentos</h2>
+    <form>
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="nombreCliente">Nombre del Cliente:</label>
+        <input class="w-full px-3 py-2 border rounded-md text-sm" type="text" id="nombreCliente" [(ngModel)]="nombreCliente" name="nombreCliente" disabled>
       </div>
+
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="entidad">Entidad:</label>
+        <input class="w-full px-3 py-2 border rounded-md text-sm" type="text" id="entidad" [(ngModel)]="entidad" name="entidad" disabled>
+      </div>
+
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="direccion">Dirección:</label>
+        <input class="w-full px-3 py-2 border rounded-md text-sm" type="text" id="direccion" [(ngModel)]="direccionSeleccionada" name="direccion" disabled>
+      </div>
+
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="fecha">Fecha de reserva:</label>
+        <input class="w-full px-3 py-2 border rounded-md text-sm" type="date" id="fecha" name="fecha" [(ngModel)]="fechaReserva">
+      </div>
+
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="hora">Hora de reserva:</label>
+        <input class="w-full px-3 py-2 border rounded-md text-sm" type="time" id="hora" name="hora" [(ngModel)]="horaReserva">
+      </div>
+
+      <div class="flex justify-center">
+        <button type="button" (click)="reservarMedicamento()" class="bg-blue-600 text-white px-10 py-1 rounded-md text-sm">Reservar</button>
+      </div>
+
+      <div *ngIf="mensajeDisponibilidad !== ''" class="text-blue-600 text-xs mt-2">
+        <p>{{ mensajeDisponibilidad }}</p>
+      </div>
+    </form>
+  </div>
+</div>

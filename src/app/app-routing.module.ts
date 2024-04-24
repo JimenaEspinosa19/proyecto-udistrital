@@ -15,7 +15,7 @@ import { PerfilComponent } from './components/perfil/perfil.component';
 
 
 const routes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' }, // Redirige a 'login' al abrir la aplicación
+  { path: '', redirectTo: 'login', pathMatch: 'full' }, 
   { path: 'login', component: LoginComponent },
   { path: 'sign-up', component: SignUpComponent },
   { 
@@ -29,7 +29,7 @@ const routes: Routes = [
       { path: 'inventarios', component: InventariosComponent,canActivate: [AuthGuard] },
       { path: 'perfil', component: PerfilComponent,canActivate: [AuthGuard] },
 
-      // Otras rutas para componentes que necesiten el encabezado
+      
     ]
   },
 

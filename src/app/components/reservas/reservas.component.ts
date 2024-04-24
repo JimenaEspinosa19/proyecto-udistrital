@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { AuthService } from 'src/app/shared/services/auth.service';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { Component, OnInit } from '@angular/core';
+import { DataService } from 'src/app/shared/services/data.service';
+
+
 
 
 @Component({
@@ -9,7 +9,56 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   templateUrl: './reservas.component.html',
   styleUrls: ['./reservas.component.css']
 })
-export class ReservasComponent {
+export class ReservasComponent implements OnInit {
+  
+  
 
-  constructor(private authService: AuthService, private router: Router) {}
-}
+  nombreCliente: string = '';
+  entidad: string = '';
+  direccionSeleccionada: string = '';
+  fechaReserva: string = '';
+  horaReserva: string = '';
+  mensajeDisponibilidad: string = '';
+
+  constructor(private dataService: DataService) { } 
+
+   
+    ngOnInit(): void {
+      const datosCliente = this.dataService.getDatosCliente();
+      if (datosCliente) {
+        this.nombreCliente = datosCliente.nombreCliente;
+        this.entidad = datosCliente.entidad;
+        this.direccionSeleccionada = datosCliente.direccionSeleccionada;
+      }
+    }
+
+    async reservarMedicamento() {
+      console.log("Reservando medicamento...");
+      console.log("Nombre del cliente:", this.nombreCliente);
+      console.log("Entidad:", this.entidad);
+      console.log("Dirección:", this.direccionSeleccionada);
+      console.log("Fecha de reserva:", this.fechaReserva);
+      console.log("Hora de reserva:", this.horaReserva);
+  
+    
+      const mensajeAnterior = this.mensajeDisponibilidad;
+  
+      
+      this.mensajeDisponibilidad = '';
+  
+   
+      await this.dataService.crearReservaMedicamento(
+        this.nombreCliente,
+        this.entidad,
+        this.direccionSeleccionada,
+        this.fechaReserva,
+        this.horaReserva
+      );
+  
+      
+      this.mensajeDisponibilidad = mensajeAnterior;
+  
+    
+      this.mensajeDisponibilidad = "Medicamento reservado con éxito";
+    }
+  }

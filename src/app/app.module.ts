@@ -1,3 +1,4 @@
+
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -26,6 +27,9 @@ import { InventariosComponent } from './components/inventarios/inventarios.compo
 import { ReservasComponent } from './components/reservas/reservas.component';
 import { RegistrarComponent } from './components/registrar/registrar.component';
 import { MatSelectModule } from '@angular/material/select';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 @NgModule({
   declarations: [
     AppComponent,
@@ -50,7 +54,11 @@ import { MatSelectModule } from '@angular/material/select';
     MatSidenavModule,
     MatFormFieldModule,
     MatSelectModule,
+    FormsModule,
+    MatAutocompleteModule,
+    ReactiveFormsModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideFirestore(() => getFirestore()),
     provideAuth(() => getAuth()),
 
     // error solution NullInjectError

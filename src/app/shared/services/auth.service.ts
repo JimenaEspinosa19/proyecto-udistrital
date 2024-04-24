@@ -32,7 +32,6 @@ export class AuthService {
 
   }
 
-  // log-in with email and password
   logInWithEmailAndPassword(email: string, password: string) {
     return this.firebaseAuthenticationService.signInWithEmailAndPassword(email, password)
       .then((userCredential) => {
@@ -44,7 +43,6 @@ export class AuthService {
       })
   }
 
-  // log-in with google
   logInWithGoogleProvider() {
     return this.firebaseAuthenticationService.signInWithPopup(new GoogleAuthProvider())
       .then(() => this.observeUserState())
@@ -53,7 +51,7 @@ export class AuthService {
       })
   }
 
-  // sign-up with email and password
+  
   signUpWithEmailAndPassword(email: string, password: string) {
     return this.firebaseAuthenticationService.createUserWithEmailAndPassword(email, password)
       .then((userCredential) => {
