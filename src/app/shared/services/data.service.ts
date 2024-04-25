@@ -1,24 +1,27 @@
 import { Injectable } from '@angular/core';
-import { collection, query, where, getDocs, Firestore, addDoc } from '@angular/fire/firestore';
+import { collection, query, where, getDocs, Firestore, addDoc, deleteDoc, doc} from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
-
-  nombreCliente: string;
+  nmedicamento: string;
+  identificacion: number;
+  medicamento: string;
   entidad: string;
   direccionSeleccionada: string;
 
   constructor(public firestore: Firestore) {
-    this.nombreCliente = '';
+    this.medicamento = '';
     this.entidad = '';
     this.direccionSeleccionada = '';
+    this.nmedicamento = '';
+    this.identificacion =0;
   }
 
-  async createmedicament(nombre: string, cantidad: string, direcciones: string[], entidad: string) {
+  async createmedicament(nmedicamento: string, cantidad: string, direcciones: string[], entidad: string) {
     const docRef = await addDoc(collection(this.firestore, 'medicamentos'), {
-      nombre: nombre,
+      nmedicamento: nmedicamento,
       cantidad: cantidad,
       entidad: entidad,
       direcciones: direcciones,
@@ -32,7 +35,7 @@ export class DataService {
   }
 
   async searchMedicamentos(nombre: string) {
-    const querySnapshot = await getDocs(query(collection(this.firestore, 'medicamentos'), where('nombre', '>=', nombre.toLowerCase()), where('nombre', '<=', nombre.toLowerCase() + '\uf8ff')));
+    const querySnapshot = await getDocs(query(collection(this.firestore, 'medicamentos'), where('nmedicamento', '>=', nombre.toLowerCase()), where('nmedicamento', '<=', nombre.toLowerCase() + '\uf8ff')));
     return querySnapshot.docs.map(doc => doc.data());
   }
 
@@ -41,14 +44,14 @@ export class DataService {
     return querySnapshot.docs.map(doc => doc.data()['Direccion']) as string[];
   }
 
-  async searchMedicamentoEnDireccion(nombre: string, entidad: string, direcciones: string[]): Promise<boolean> {
+  async searchMedicamentoEnDireccion(nmedicamento: string, entidad: string, direcciones: string[]): Promise<boolean> {
     const medicamentos = await this.getMedicamentos();
-    const medicamento = medicamentos.find(med => med['nombre'].toLowerCase() === nombre.toLowerCase() && med['entidad'] === entidad);
+    const medicamento = medicamentos.find(med => med['nmedicamento'].toLowerCase() === nmedicamento.toLowerCase() && med['entidad'] === entidad);
     return medicamento ? medicamento['direcciones'].some((dir: string) => direcciones.includes(dir)) : false;
   }
 
-  setDatosCliente(nombre: string, entidad: string, direccion: string) {
-    this.nombreCliente = nombre;
+  setDatosCliente(nmedicamento: string, entidad: string, direccion: string) {
+    this.nmedicamento = nmedicamento;
     this.entidad = entidad;
     this.direccionSeleccionada = direccion;
   }
@@ -56,14 +59,16 @@ export class DataService {
   getDatosCliente() {
     
     return {
-      nombreCliente: this.nombreCliente,
+      nmedicamento: this.nmedicamento,
       entidad: this.entidad,
       direccionSeleccionada: this.direccionSeleccionada
     };
   }
 
   async crearReservaMedicamento(
-    nombreCliente: string,
+    nombre: string,
+    identificacion: string,
+    nmedicamento: string,
     entidad: string,
     direccionSeleccionada: string,
     fechaReserva: string,
@@ -71,7 +76,9 @@ export class DataService {
   ) {
     try {
       await addDoc(collection(this.firestore, 'reservas'), {
-        nombreCliente,
+        nombre,
+        identificacion,
+        nmedicamento,
         entidad,
         direccionSeleccionada,
         fechaReserva,
@@ -84,4 +91,22 @@ export class DataService {
     }
   }
 
+  async eliminarMedicamento(id: string) {
+    try {
+      await deleteDoc(doc(this.firestore, 'medicamentos', id));
+      console.log("Medicamento eliminado con éxito en Firestore.");
+    } catch (error) {
+      console.error("Error al eliminar medicamento:", error);
+      throw error;
+    }
+  }
+
+  async getReservas(): Promise<any[]> {
+    const snapshot = await getDocs(collection(this.firestore, 'reservas'));
+    return snapshot.docs.map(doc => doc.data());
+  }
 }
+
+  
+
+

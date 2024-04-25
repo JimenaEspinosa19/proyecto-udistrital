@@ -11,4 +11,6 @@ export class PerfilComponent {
 
   constructor(private authService: AuthService, private router: Router) {}
 
+  
+
 }

@@ -74,7 +74,14 @@ export class AuthService {
     const user = JSON.parse(localStorage.getItem('user')!);
     return user !== null;
   }
-
+  
+  getCurrentUserID(): string | null {
+    if (this.userData) {
+      return this.userData.uid;
+    } else {
+      return null;
+    }
+  }
   // logOut
   logOut() {
     return this.firebaseAuthenticationService.signOut().then(() => {

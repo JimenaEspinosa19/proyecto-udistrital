@@ -11,7 +11,7 @@
             <div class="autocomplete-options"*ngIf="medicamentosFiltrados | async as filteredMedicamentos">
               <ul  class="autocomplete-options" >
                 <li class="autocomplete-option"   *ngFor="let medicamento of filteredMedicamentos" (click)="selectMedicamento(medicamento)">
-                  {{ medicamento.nombre }}
+                  {{ medicamento.nmedicamento }}
                 </li>
               </ul>
             </div>

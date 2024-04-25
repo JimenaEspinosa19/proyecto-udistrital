@@ -10,6 +10,8 @@ import { ReservasComponent } from './components/reservas/reservas.component';
 import { RegistrarComponent } from './components/registrar/registrar.component';
 import { InventariosComponent } from './components/inventarios/inventarios.component';
 import { PerfilComponent } from './components/perfil/perfil.component';
+import { MisreservasComponent } from './components/misreservas/misreservas.component';
+
 
 
 
@@ -28,7 +30,7 @@ const routes: Routes = [
       { path: 'registrar', component: RegistrarComponent,canActivate: [AuthGuard] },
       { path: 'inventarios', component: InventariosComponent,canActivate: [AuthGuard] },
       { path: 'perfil', component: PerfilComponent,canActivate: [AuthGuard] },
-
+      { path: 'misreservas', component: MisreservasComponent,canActivate: [AuthGuard] }
       
     ]
   },

@@ -70,39 +70,7 @@ mat-toolbar {
     background-color: rgba(255, 255, 255, 0.5);
   }
   
-  mat-toolbar {
-          display: flex;
-          justify-content: space-between;
-        }
-  
-        .container {
-          display: flex;
-          align-items: center;
-        }
-  
-        .navbar-brand {
-          font-weight: bold;
-          color: white;
-          text-decoration: none;
-          margin-right: 20px;
-        }
-  
-        .navbar-nav {
-          display: flex;
-          list-style-type: none;
-          margin: 0;
-          padding: 0;
-        }
-  
-        .nav-item {
-          margin-right: 10px;
-        }
-  
-        .avatar-container {
-          display: flex;
-          justify-content: center; /* Centra horizontalmente */
-          align-items: center; /* Centra verticalmente */
-          height: 20%; /* Ajusta la altura del contenedor */
-        }
+  .fixed-table {
+    width: calc(100% - 48px); 
         
-    
+  }

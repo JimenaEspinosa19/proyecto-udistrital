@@ -4,16 +4,16 @@ import { DataService } from 'src/app/shared/services/data.service';
 
 
 
+
 @Component({
   selector: 'app-reservas',
   templateUrl: './reservas.component.html',
   styleUrls: ['./reservas.component.css']
 })
 export class ReservasComponent implements OnInit {
-  
-  
-
-  nombreCliente: string = '';
+  nombre: string = '';
+  identificacion: string = '';
+  nmedicamento: string = '';
   entidad: string = '';
   direccionSeleccionada: string = '';
   fechaReserva: string = '';
@@ -22,11 +22,11 @@ export class ReservasComponent implements OnInit {
 
   constructor(private dataService: DataService) { } 
 
-   
     ngOnInit(): void {
       const datosCliente = this.dataService.getDatosCliente();
       if (datosCliente) {
-        this.nombreCliente = datosCliente.nombreCliente;
+      
+        this.nmedicamento = datosCliente.nmedicamento;
         this.entidad = datosCliente.entidad;
         this.direccionSeleccionada = datosCliente.direccionSeleccionada;
       }
@@ -34,7 +34,7 @@ export class ReservasComponent implements OnInit {
 
     async reservarMedicamento() {
       console.log("Reservando medicamento...");
-      console.log("Nombre del cliente:", this.nombreCliente);
+      console.log("Nombre del medicamento:", this.nmedicamento);
       console.log("Entidad:", this.entidad);
       console.log("Dirección:", this.direccionSeleccionada);
       console.log("Fecha de reserva:", this.fechaReserva);
@@ -48,11 +48,14 @@ export class ReservasComponent implements OnInit {
   
    
       await this.dataService.crearReservaMedicamento(
-        this.nombreCliente,
+        this.nombre,
+        this.identificacion,
+        this.nmedicamento,
         this.entidad,
         this.direccionSeleccionada,
         this.fechaReserva,
         this.horaReserva
+        
       );
   
       

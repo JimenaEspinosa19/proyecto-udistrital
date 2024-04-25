@@ -1,0 +1,38 @@
+
+<div class="content mat-elevation-z8" style="color: rgb(4, 4, 4); background-color: #f3ecec;">
+    <div class="max-w-7xl mx-auto bg-white p-6 shadow-md rounded-md">
+      <h2 class="text-xl font-semibold mb-4">Reservas de Medicamentos</h2>
+      <table class="w-full divide-y divide-gray-200 text-sm">
+        <thead class="bg-blue-50">
+          <tr>
+            <th scope="col" class="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Nombre</th>
+            <th scope="col" class="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Número de identificacion</th>
+            <th scope="col" class="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Medicamento</th>
+            <th scope="col" class="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Entidad</th>
+            <th scope="col" class="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Dirección</th>
+            <th scope="col" class="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Fecha de Reserva</th>
+            <th scope="col" class="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Hora de Reserva</th>
+            <th scope="col" class="relative px-6 py-3"></th>
+          </tr>
+        </thead>
+
+
+        <tbody class="bg-white divide-y divide-gray-200">
+         <tr *ngFor="let item of reservas;">
+
+            <td class="px-6 py-4 whitespace-nowrap">{{ item.nombre }}</td>
+            <td class="px-6 py-4 whitespace-nowrap">{{ item.identificacion }}</td>
+            <td class="px-6 py-4 whitespace-nowrap">{{ item.nmedicamento }}</td>
+            <td class="px-6 py-4 whitespace-nowrap">{{ item.entidad }}</td>
+            <td class="px-6 py-4 whitespace-nowrap">{{ item.direccionSeleccionada }}</td>
+            <td class="px-6 py-4 whitespace-nowrap">{{ item.fechaReserva }}</td>
+            <td class="px-6 py-4 whitespace-nowrap">{{ item.horaReserva }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+              
+            </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  

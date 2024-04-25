@@ -16,7 +16,7 @@ export class MedicamentosComponent implements OnInit {
 
  medicamentos: any;
  opcionesMedicamentos: any[] = [];
- nombre: string = '';
+ nmedicamento: string = '';
  medicamentoControl = new FormControl();
  medicamentosFiltrados!: Observable<any[]>;
  nombreControl = new FormControl();
@@ -41,11 +41,11 @@ export class MedicamentosComponent implements OnInit {
    if (!filterValue) {      
      return [];
    }
-   return this.opcionesMedicamentos.filter(option => option.nombre.toLowerCase().includes(filterValue));
+   return this.opcionesMedicamentos.filter(option => option.nmedicamento.toLowerCase().includes(filterValue));
  }
 
  displayFn(med?: any): string | undefined {
-   return med ? med.nombre : undefined;
+   return med ? med.nmedicamento : undefined;
  }
 
  async readMedicamentos() {
@@ -55,8 +55,8 @@ export class MedicamentosComponent implements OnInit {
  }
 
  selectMedicamento(medicamento: any) {
-   this.nombre = medicamento.nombre; 
-   this.medicamentoControl.setValue(medicamento.nombre); 
+   this.nmedicamento = medicamento.nmedicamento; 
+   this.medicamentoControl.setValue(medicamento.nmedicamento); 
  }
 
  async actualizarDireccionesPorEntidad(entidad: string) {
@@ -70,9 +70,9 @@ export class MedicamentosComponent implements OnInit {
 
  async buscarMedicamento() {
  
-  this.dataService.setDatosCliente(this.nombre, this.entidad, this.direccionSeleccionada);
+  this.dataService.setDatosCliente(this.nmedicamento, this.entidad, this.direccionSeleccionada);
   
-  const medicamentoEnDireccion = await this.dataService.searchMedicamentoEnDireccion(this.nombre, this.entidad, this.direcciones);
+  const medicamentoEnDireccion = await this.dataService.searchMedicamentoEnDireccion(this.nmedicamento, this.entidad, this.direcciones);
   if (medicamentoEnDireccion) {
     this.medicamentoDisponible = true;
     this.mensajeDisponibilidad = 'El medicamento está disponible en esta dirección.';
