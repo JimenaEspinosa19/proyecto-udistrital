@@ -9,8 +9,9 @@ import { EncabezadoComponent } from './components/encabezado/encabezado.componen
 import { ReservasComponent } from './components/reservas/reservas.component';
 import { RegistrarComponent } from './components/registrar/registrar.component';
 import { InventariosComponent } from './components/inventarios/inventarios.component';
-import { PerfilComponent } from './components/perfil/perfil.component';
 import { MisreservasComponent } from './components/misreservas/misreservas.component';
+import { NotificacionesComponent } from './components/notificaciones/notificaciones.component';
+
 
 
 
@@ -29,8 +30,9 @@ const routes: Routes = [
       { path: 'reservas', component: ReservasComponent,canActivate: [AuthGuard] },
       { path: 'registrar', component: RegistrarComponent,canActivate: [AuthGuard] },
       { path: 'inventarios', component: InventariosComponent,canActivate: [AuthGuard] },
-      { path: 'perfil', component: PerfilComponent,canActivate: [AuthGuard] },
-      { path: 'misreservas', component: MisreservasComponent,canActivate: [AuthGuard] }
+      { path: 'misreservas', component: MisreservasComponent,canActivate: [AuthGuard] },
+      { path: 'notificaciones', component: NotificacionesComponent,canActivate: [AuthGuard] },
+    
       
     ]
   },

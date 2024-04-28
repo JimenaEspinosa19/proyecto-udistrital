@@ -1,55 +1,52 @@
+<div class="content mat-elevation-z8" style="color: rgb(4, 4, 4); background-color: #f6eeee;">
 
+  <div class="max-w-md mx-auto bg-white p-10 shadow-md rounded-md" style="max-width: 500px;">
+      <h2 class="text-xl font-semibold mb-4">Registrar medicamento</h2>
+      <form (ngSubmit)="addMedicament(Nombre, cantidad, entidad)">
+          <div class="mb-4">
+              <label class="block text-gray-700 text-sm font-bold mb-2" for="medicamentoInput">Nombre del medicamento:</label>
+              <input class="w-full px-3 py-2 border rounded-md text-sm" type="text" id="medicamentoInput" [formControl]="medicamentoControl">
+              <div class="autocomplete-options"*ngIf="medicamentosFiltrados | async as filteredMedicamentos">
+                                <ul class="autocomplete-options">
+                      <li class="autocomplete-option" *ngFor="let medicamento of filteredMedicamentos" (click)="selectMedicamento(medicamento)">
+                          {{ medicamento.Nombre }}
+                      </li>
+                  </ul>
+              </div>
+          </div>
 
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="cantidadInput">Cantidad:</label>
+            <input class="w-full px-3 py-2 border rounded-md text-sm" type="text" id="cantidadInput" name="cantidad" [(ngModel)]="cantidad">
+        </div>
         
-    <div class="content mat-elevation-z8" style="color: rgb(4, 4, 4); background-color: #f6eeee;">
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="ciudad">Ciudad</label>
+            <select name="ciudad" [(ngModel)]="ciudad" class="w-full px-3 py-2 border rounded-md text-sm" (change)="onChangeCiudad($event)">
+             
+                <option *ngFor="let ciudad of ciudades">{{ ciudad }}</option>
+            </select>
+        </div>
+          
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="entidad">Entidad</label>
+            <select id="entidad" name="entidad" [(ngModel)]="entidad" class="w-full px-3 py-2 border rounded-md text-sm">
+              <option *ngFor="let entidad of entidades">{{ entidad }}</option>
+            </select>
+          </div>
+          
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="direccion">Dirección</label>
+            <select id="direccion" name="direccion" [(ngModel)]="direccionSeleccionada" class="w-full px-3 py-2 border rounded-md text-sm">
+              <option *ngFor="let dir of entidadesDirecciones[entidad]" [value]="dir">{{ dir }}</option>
+            </select>
+          </div>
+        
 
-        <div class="max-w-md mx-auto bg-white p-20 shadow-md rounded-md">
-          <h2 class="text-xl font-semibold mb-4">Registrar medicamento</h2>
-          <form (ngSubmit)="addMedicament(nombre, cantidad, entidad)">
-              <div class="mb-4">
-                  <label class="block text-gray-700 text-sm font-bold mb-2" for="nombre">Nombre del medicamento</label>
-                  <input name="nombre" [(ngModel)]="nombre" class="w-full px-3 py-2 border rounded-md text-sm">
-              </div>
-              <div class="mb-4">
-                  <label class="block text-gray-700 text-sm font-bold mb-2" for="cantidad">Cantidad</label>
-                  <input name="cantidad" [(ngModel)]="cantidad" class="w-full px-3 py-2 border rounded-md text-sm">
-              </div>
-              
-              <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="entidad">Entidad</label>
-                <select id="entidad" name="entidad" [(ngModel)]="entidad" class="w-full px-3 py-2 border rounded-md text-sm" (change)="actualizarDireccionesPorEntidad(entidad)">
-                  <option value="Audifarma">Audifarma</option>
-                  <option value="Colsubsidio">Colsubsidio</option>
-                  <option value="Cruz Verde">Cruz Verde</option> 
-                </select>
-              </div>
-              
-              <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="direccion">Dirección</label>
-                <select id="direccion" name="direccion" [(ngModel)]="direccionSeleccionada" class="w-full px-3 py-2 border rounded-md text-sm">
-  <ng-container *ngIf="direcciones && direcciones.length">
-    <option *ngFor="let dir of direcciones" [value]="dir">{{ dir }}</option>
-  </ng-container>
-</select>
-              </div>
-
-              
-              <div class="flex justify-center">
-                  <button type="submit" class="bg-blue-600 text-white px-10 py-1 rounded-md text-sm">Registrar</button>
-                  
-                  
-              </div>
-          </form>
-          <div id="mensaje" class="text-blue-600 text-xs mt-2" [class.hidden]="!mensaje">{{ mensaje }}</div>
-  
-  
+          <div class="flex justify-center">
+              <button type="submit" class="bg-blue-600 text-white px-10 py-1 rounded-md text-sm">Registrar</button>
+          </div>
+      </form>
+      <div id="mensaje" class="text-blue-600 text-xs mt-2" [class.hidden]="!mensaje">{{ mensaje }}</div>
   </div>
-      </div>
-      
-    
-  
-      
-  
-  
-      
-  
+</div>

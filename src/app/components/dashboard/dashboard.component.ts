@@ -45,8 +45,16 @@ export class DashboardComponent {
     } else {
       return null;
     }
+    
   }
 
+  getCurrentUserEmail(): string | null {
+    if (this.userData) {
+      return this.userData.email;
+    } else {
+      return null;
+    }
+  }
   // Método para cerrar sesión
   logOut() {
     return this.firebaseAuthenticationService.signOut().then(() => {

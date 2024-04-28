@@ -5,7 +5,7 @@
       <div class="mb-4 flex">
         <div class="w-1/2 mr-2">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="nombre">Nombre:</label>
-          <input class="w-full px-3 py-2 border rounded-md text-sm" type="text" id="nombre" [(ngModel)]="nombre" name="nombre">
+          <input class="w-full px-3 py-2 border rounded-md text-sm" type="text" id="nombre" [(ngModel)]="nombreCliente" name="nombre">
         </div>
         <div class="w-1/2 ml-2">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="identificacion">Identificación:</label>
@@ -30,13 +30,18 @@
       </div>
 
       <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="cantidad">Cantidad:</label>
+        <input class="w-full px-3 py-2 border rounded-md text-sm" type="text" id="cantidad" [(ngModel)]="cantidad" name="cantidad" disabled>
+      </div>
+
+      <div class="mb-4">
         <label class="block text-gray-700 text-sm font-bold mb-2" for="entidad">Entidad:</label>
         <input class="w-full px-3 py-2 border rounded-md text-sm" type="text" id="entidad" [(ngModel)]="entidad" name="entidad" disabled>
       </div>
 
       <div class="mb-4">
         <label class="block text-gray-700 text-sm font-bold mb-2" for="direccion">Dirección:</label>
-        <input class="w-full px-3 py-2 border rounded-md text-sm" type="text" id="direccion" [(ngModel)]="direccionSeleccionada" name="direccion" disabled>
+        <input class="w-full px-3 py-2 border rounded-md text-sm" type="text" id="direcciones" [(ngModel)]="direccionSeleccionada" name="direcciones" disabled>
       </div>
 
       <div class="flex justify-center">

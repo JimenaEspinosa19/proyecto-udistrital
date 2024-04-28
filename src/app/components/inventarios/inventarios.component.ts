@@ -9,6 +9,7 @@ import { DataService } from 'src/app/shared/services/data.service';
 export class InventariosComponent implements OnInit {
   medicamentos: any[] = [];
   medicamentosFiltrados: any[] = [];
+  medicamentosF: any[] =[];
   terminoBusqueda: string = '';
 
   constructor(private dataService: DataService) { }
@@ -19,7 +20,7 @@ export class InventariosComponent implements OnInit {
 
   async cargarMedicamentos() {
     try {
-      this.medicamentos = await this.dataService.getMedicamentos();
+      this.medicamentos = await this.dataService.getMedicamentosTodos();
       this.medicamentosFiltrados = [...this.medicamentos];
       console.log(this.medicamentos); 
     } catch (error) {
@@ -27,26 +28,34 @@ export class InventariosComponent implements OnInit {
     }
   }
 
-  buscarMedicamento() {
-    this.medicamentosFiltrados = this.medicamentos.filter(medicamento =>
-      medicamento.nombre.toLowerCase().includes(this.terminoBusqueda.toLowerCase())
-    );
-    
-  }
-  async eliminarMedicamento(index: number) {
-    const medicamentoAEliminar = this.medicamentosFiltrados[index];
+  async TraerMedicamentos() {
     try {
-     
-      await this.dataService.eliminarMedicamento(medicamentoAEliminar.id);
-    
-      this.medicamentosFiltrados.splice(index, 1);
+      this.medicamentos = await this.dataService.getMedicamentos();
+      this.medicamentosF = [...this.medicamentos];
+      console.log(this.medicamentos); 
     } catch (error) {
-      console.error("Error al eliminar el medicamento:", error);
+      console.error("Error al cargar medicamentos:", error);
     }
   }
 
+  buscarMedicamento() {
+    this.medicamentosF = this.medicamentos.filter(medicamento =>
+      medicamento.nombre.toLowerCase().includes(this.terminoBusqueda.toLowerCase())
+    );
+  }
+    EliminarMedicamento(reservaData: any) {
+      if (reservaData) {
+        this.dataService.eliminarMedicamento(reservaData).then(() => {
+          console.log('Medicamento eliminado correctamente');
+        }).catch((error: any) => {
+          console.error('Error al eliminar el medicamento:', error);
+        });
+      } else {
+        console.error('Los datos del medicamento son undefined');
+      }
+    }
+  }
   
 
-}
 
 

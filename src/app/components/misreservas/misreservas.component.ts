@@ -24,5 +24,18 @@ export class MisreservasComponent implements OnInit {
       console.error('Error al cargar reservas:', error);
     });
   }
+
+  cancelarReserva(reservaData: any) {
+    if (reservaData) {
+      this.dataService.eliminarReserva(reservaData).then(() => {
+        console.log('Reserva eliminada correctamente de la base de datos');
+      }).catch((error: any) => {
+        console.error('Error al eliminar la reserva de la base de datos:', error);
+      });
+    } else {
+      console.error('Los datos de la reserva son undefined');
+    }
+  }
 }
+
 

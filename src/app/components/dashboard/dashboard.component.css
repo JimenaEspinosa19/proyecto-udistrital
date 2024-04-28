@@ -67,7 +67,7 @@ mat-sidenav-container {
 mat-divider {
   margin-top: 16px;
   margin-bottom: 16px;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(90, 51, 221, 0.5);
 }
 
 mat-toolbar {
@@ -105,4 +105,12 @@ mat-toolbar {
         height: 20%; /* Ajusta la altura del contenedor */
       }
       
-  
+      .example-card {
+        max-width: 400px;
+        margin-bottom: 8px;
+      }
+
+      .inicio-card {
+        background-color: #053c7a;
+        color: white; /* Cambia el color del texto a blanco */
+      }

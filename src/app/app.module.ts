@@ -20,8 +20,6 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MedicamentosComponent } from './components/medicamentos/medicamentos.component';
 import { EncabezadoComponent } from './components/encabezado/encabezado.component';
-import { MenuComponent } from './components/menu/menu.component';
-import { PerfilComponent } from './components/perfil/perfil.component';
 import { InventariosComponent } from './components/inventarios/inventarios.component';
 import { ReservasComponent } from './components/reservas/reservas.component';
 import { RegistrarComponent } from './components/registrar/registrar.component';
@@ -30,6 +28,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MisreservasComponent } from './components/misreservas/misreservas.component';
+import { MatCardModule } from '@angular/material/card';
+import { RouterModule, Router } from '@angular/router';
+import { NotificacionesComponent } from './components/notificaciones/notificaciones.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -38,12 +40,12 @@ import { MisreservasComponent } from './components/misreservas/misreservas.compo
     DashboardComponent,
     MedicamentosComponent,
     EncabezadoComponent,
-    MenuComponent,
-    PerfilComponent,
     InventariosComponent,
     ReservasComponent,
     RegistrarComponent,
-    MisreservasComponent
+    MisreservasComponent,
+    NotificacionesComponent,
+    
   ],
   imports: [
     BrowserModule,
@@ -58,6 +60,8 @@ import { MisreservasComponent } from './components/misreservas/misreservas.compo
     FormsModule,
     MatAutocompleteModule,
     ReactiveFormsModule,
+    MatCardModule,
+    RouterModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideFirestore(() => getFirestore()),
     provideAuth(() => getAuth()),
@@ -66,7 +70,7 @@ import { MisreservasComponent } from './components/misreservas/misreservas.compo
     AngularFireModule.initializeApp(environment.firebase),
       BrowserAnimationsModule
   ],
-  providers: [],
+  providers: [Router],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

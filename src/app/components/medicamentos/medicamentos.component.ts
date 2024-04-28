@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from 'src/app/shared/services/auth.service';
-import { Router } from '@angular/router';
-import { DataService } from 'src/app/shared/services/data.service';
 import { FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
+import { DataService } from 'src/app/shared/services/data.service';
 
 
 @Component({
@@ -14,77 +13,149 @@ import { startWith, map } from 'rxjs/operators';
 })
 export class MedicamentosComponent implements OnInit {
 
- medicamentos: any;
- opcionesMedicamentos: any[] = [];
- nmedicamento: string = '';
- medicamentoControl = new FormControl();
- medicamentosFiltrados!: Observable<any[]>;
- nombreControl = new FormControl();
- direcciones: string[] = [];
- entidad: string = '';
- medicamentoDisponible: boolean = false;
- mensajeDisponibilidad: string = '';
- direccionSeleccionada: string = '';
-
- constructor(private authService: AuthService, private router: Router, public dataService: DataService) {}
-
- ngOnInit() {
-   this.readMedicamentos(); 
-   this.medicamentosFiltrados = this.medicamentoControl.valueChanges.pipe(
-     startWith(''),
-     map(value => this.filterMedicamentos(value))
-   );
- }
-
- private filterMedicamentos(value: string): any[] {
-   const filterValue = value.toLowerCase();
-   if (!filterValue) {      
-     return [];
-   }
-   return this.opcionesMedicamentos.filter(option => option.nmedicamento.toLowerCase().includes(filterValue));
- }
-
- displayFn(med?: any): string | undefined {
-   return med ? med.nmedicamento : undefined;
- }
-
- async readMedicamentos() {
-   this.medicamentos = await this.dataService.getMedicamentos();
-   this.opcionesMedicamentos = this.medicamentos; 
-   console.log('Datos de medicamentos:', this.medicamentos);
- }
-
- selectMedicamento(medicamento: any) {
-   this.nmedicamento = medicamento.nmedicamento; 
-   this.medicamentoControl.setValue(medicamento.nmedicamento); 
- }
-
- async actualizarDireccionesPorEntidad(entidad: string) {
-   const direcciones = await this.dataService.getDireccionesPorEntidad(entidad);
-   if (direcciones && direcciones.length > 0) {
-     this.direcciones = direcciones;
-   } else {
-     this.direcciones = [];
-   }
- }
-
- async buscarMedicamento() {
- 
-  this.dataService.setDatosCliente(this.nmedicamento, this.entidad, this.direccionSeleccionada);
+  medicamentoDisponible: boolean = false;
+  mensajeDisponibilidad: string = '';
+  Nombre: string = '';
+  ciudad: string = ''; 
+  medicamentos: any[] = [];
+  cantidad: string = '';
+  entidad: string = '';
+  mensaje: string = '';
+  nmedicamento: string = '';
+  direcciones: string[] = [];
+  direccionSeleccionada: string ="";
+  opcionesMedicamentos: any[] = []; 
+  medicamentoControl = new FormControl();
+  ciudades: string[] = []; 
+  entidades: string[] = [];
+  eps: string = '';
+  epsSeleccionada: string[] = [];
+  direccionesFiltradas: string[] = [];
+  mostrarBotonesNotificacionYPuntos: boolean = false;
   
-  const medicamentoEnDireccion = await this.dataService.searchMedicamentoEnDireccion(this.nmedicamento, this.entidad, this.direcciones);
-  if (medicamentoEnDireccion) {
-    this.medicamentoDisponible = true;
-    this.mensajeDisponibilidad = 'El medicamento está disponible en esta dirección.';
-  } else {
-    this.medicamentoDisponible = false;
-    this.mensajeDisponibilidad = 'El medicamento no está disponible en esta dirección.';
+  medicamentosFiltrados!: Observable<any[]>;
+  entidadesDirecciones: { [entidad: string]: string[] } = {};
+  
+
+  constructor(private dataService: DataService, private router: Router) {}
+
+  async ngOnInit() {
+    await this.loadCiudades();
+    
+    this.medicamentosFiltrados = this.medicamentoControl.valueChanges.pipe(
+      startWith(''),
+      map(value => this.filterMedicamentos(value))
+    );
+
+
+    this.opcionesMedicamentos = await this.dataService.getMedicamentos(); 
   }
- }
 
-async reservarMedicamento() {
-  this.router.navigate(['/reservas']);
+  async loadCiudades() {
+    this.ciudades = await this.dataService.getCiudades();
+  }
 
+  private filterMedicamentos(value: string): any[] {
+    const filterValue = value.toLowerCase();
+    if (!filterValue || !this.opcionesMedicamentos) {      
+      return [];
+    }
+    return this.opcionesMedicamentos.filter(option => option.Nombre.toLowerCase().includes(filterValue));
+  }
+
+  selectMedicamento(medicamento: any) {
+    this.Nombre = medicamento.Nombre; 
+    this.medicamentoControl.setValue(medicamento.Nombre); 
+  }
+
+  async buscarMedicamento() { 
+    console.log('Nombre del medicamento:', this.nmedicamento);
+    console.log('Entidad:', this.entidad);
+    console.log('Direcciones:', this.direccionSeleccionada);
+    console.log('Ciudad:', this.ciudad);
+    console.log('Cantidad:', this.cantidad); 
+
+    
+    const cantidadNumerica = parseInt(this.cantidad);
+    console.log('CANTIDAD FINAL', cantidadNumerica)
+
+   
+    if (isNaN(cantidadNumerica) || cantidadNumerica <= 0) {
+        console.log('La cantidad ingresada no es válida.');
+        return; 
+    }
+
+    const direccion = this.direccionSeleccionada;
+    const medicamentos = await this.dataService.getMedicamentosTodos();
+
+    const medicamentoExistente = medicamentos.find(medicamento =>
+        medicamento['nmedicamento'] === this.nmedicamento &&
+        medicamento['direcciones'].includes(this.direccionSeleccionada) && 
+        medicamento['entidad'] === this.entidad &&
+        medicamento['ciudad'] === this.ciudad
+    );
+
+    if (medicamentoExistente) {
+      if (medicamentoExistente['cantidad'] >= cantidadNumerica) {
+          this.dataService.setDatosCliente(this.nmedicamento, this.entidad, this.direccionSeleccionada, this.cantidad);
+  
+          this.medicamentoDisponible = true;
+          this.mensajeDisponibilidad = 'El medicamento está disponible en esta dirección y ciudad.';
+      } else {
+          this.medicamentoDisponible = false;
+          this.mensajeDisponibilidad = 'El medicamento requerido no está disponible. ¿Qué acción desea realizar?';
+          this.mostrarBotonesNotificacionYPuntos = true; // Mostrar botones de notificación y otros puntos
+      }
+  } else {
+      this.medicamentoDisponible = false;
+      this.mensajeDisponibilidad = 'El medicamento no está disponible en esta dirección y ciudad. ¿Qué acción desea realizar?';
+      this.mostrarBotonesNotificacionYPuntos = true; // Mostrar botones de notificación y otros puntos
+  }
 }
 
+
+  async reservarMedicamento() {
+    this.router.navigate(['/reservas']);
+  }
+
+  async onChangeCiudad(event: any) {
+    const target = event.target as HTMLSelectElement;
+    this.ciudad = target.value;
+    console.log("Ciudad seleccionada:", this.ciudad); 
+    if (this.ciudad) {
+      this.epsSeleccionada = await this.dataService.getEPSByCiudad(this.ciudad);
+      this.onChangeEPS(this.eps); 
+    }
+  }
+
+  async onChangeEPS(eps: string) {
+    const ciudadSeleccionada = this.ciudad;
+    this.entidades = await this.dataService.getEntidadesPorCiudadYEPS(ciudadSeleccionada, eps);
+    this.entidad = this.entidades[0]; 
+    this.direccionesFiltradas = await this.dataService.getDireccionesPorEntidadYCiudad(this.entidad, ciudadSeleccionada);
+  }
+  
+
+  async updateDireccionesFiltradas() {
+    const ciudadSeleccionada = this.ciudad;
+    this.direccionesFiltradas = await this.dataService.getDireccionesPorEntidadYCiudad(this.entidad, ciudadSeleccionada);
+  }
+
+  onChangeEntidad(entidad: string) {
+    this.entidad = entidad;
+    this.updateDireccionesFiltradas(); 
+  }
+
+  async verUbicacion() {
+   
+  }
+
+  solicitarNotificacion() {
+    this.router.navigate(['/notificaciones']);
+    
+}
+
+ verOtrosPuntosCercanos() {
+   
+}
 }

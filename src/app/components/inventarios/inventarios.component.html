@@ -10,19 +10,22 @@
         <tr>
           <th scope="col" class="px-6 py-3 text-left font-light text-gray-700 uppercase tracking-wider">Nombre del Medicamento</th>
           <th scope="col" class="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Cantidad</th>
+          <th scope="col" class="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Ciudad</th>
           <th scope="col" class="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Entidad</th>
           <th scope="col" class="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Dirección</th>
           <th scope="col" class="relative px-6 py-3"></th>
         </tr>
       </thead>
       <tbody class="bg-white divide-y divide-gray-200">
-        <tr *ngFor="let medicamento of medicamentosFiltrados; let i = index">
-          <td class="px-6 py-4 whitespace-nowrap">{{ medicamento.nmedicamento }}</td>
-          <td class="px-6 py-4 whitespace-nowrap">{{ medicamento.cantidad }}</td>
-          <td class="px-6 py-4 whitespace-nowrap">{{ medicamento.entidad }}</td>
-          <td class="px-6 py-4 whitespace-nowrap">{{ medicamento.direcciones }}</td>
+        <tr *ngFor="let item of medicamentosFiltrados; let i = index">
+          <td class="px-6 py-4 whitespace-nowrap">{{ item.nmedicamento }}</td>
+          <td class="px-6 py-4 whitespace-nowrap">{{ item.cantidad }}</td>
+          <td class="px-6 py-4 whitespace-nowrap">{{ item.ciudad }}</td>
+          <td class="px-6 py-4 whitespace-nowrap">{{ item.entidad }}</td>
+          <td class="px-6 py-4 whitespace-nowrap">{{ item.direcciones }}</td>
           <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-            <button class="text-red-600 hover:text-red-900 mr-3" (click)="eliminarMedicamento(i)">Eliminar</button>
+            <button class="text-red-600 hover:text-red-900 mr-3" (click)="EliminarMedicamento(item)">Eliminar</button>
+
             <button class="text-indigo-600 hover:text-indigo-900">Modificar</button>
           </td>
         </tr>
