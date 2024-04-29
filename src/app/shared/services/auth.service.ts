@@ -20,7 +20,7 @@ export class AuthService {
 
     
   ) {
-    // OBSERVER save user in localStorage (log-in) and setting up null when log-out
+
     this.firebaseAuthenticationService.authState.subscribe((user) => {
       if (user) {
         this.userData = user;
@@ -35,17 +35,36 @@ export class AuthService {
   logInWithEmailAndPassword(email: string, password: string) {
     return this.firebaseAuthenticationService.signInWithEmailAndPassword(email, password)
       .then((userCredential) => {
-        this.userData = userCredential.user
-        this.observeUserState()
+        const user = userCredential.user;
+        console.log("Usuario:", user); 
+  
+        if (user) {
+          if (user.emailVerified) {
+         
+            this.router.navigate(['/dashboard']);
+          } else {
+      
+            console.log("Usuario autenticado pero no verificado, redireccionando a verificar correo");
+            this.router.navigate(['/verificacion']);
+          }
+        } else {
+         
+          console.log("Usuario no autenticado o no existente");
+          alert("Error de inicio de sesión: Usuario no autenticado o no existente");
+        }
+       
       })
       .catch((error) => {
+        console.error("Error durante el inicio de sesión:", error);
         alert(error.message);
-      })
+      });
   }
+  
 
   logInWithGoogleProvider() {
     return this.firebaseAuthenticationService.signInWithPopup(new GoogleAuthProvider())
-      .then(() => this.observeUserState())
+      .then(() => 
+        this.observeUserState())
       .catch((error: Error) => {
         alert(error.message);
       })
@@ -56,12 +75,25 @@ export class AuthService {
     return this.firebaseAuthenticationService.createUserWithEmailAndPassword(email, password)
       .then((userCredential) => {
         this.userData = userCredential.user
-        this.observeUserState()
+        this.VerificarCorreo()
       })
       .catch((error) => {
         alert(error.message);
       })
   }
+
+  VerificarCorreo() {
+    this.userData.sendEmailVerification()
+      .then(() => {
+        console.log('Correo de verificación enviado correctamente');
+        alert('Le hemos enviado un correo electrónico para verificar su cuenta');
+        this.router.navigate(['/login']);
+      })
+      .catch((error: any) => {
+        console.error('Error al enviar el correo de verificación:', error);
+      });
+  }
+  
 
   observeUserState() {
     this.firebaseAuthenticationService.authState.subscribe((userState) => {
@@ -69,7 +101,6 @@ export class AuthService {
     })
   }
 
-  // return true when user is logged in
   get isLoggedIn(): boolean {
     const user = JSON.parse(localStorage.getItem('user')!);
     return user !== null;

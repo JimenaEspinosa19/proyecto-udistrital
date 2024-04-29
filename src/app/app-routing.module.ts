@@ -11,6 +11,8 @@ import { RegistrarComponent } from './components/registrar/registrar.component';
 import { InventariosComponent } from './components/inventarios/inventarios.component';
 import { MisreservasComponent } from './components/misreservas/misreservas.component';
 import { NotificacionesComponent } from './components/notificaciones/notificaciones.component';
+import { VerificacioncorreoComponent } from './components/verificacioncorreo/verificacioncorreo.component';
+
 
 
 
@@ -21,6 +23,8 @@ const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' }, 
   { path: 'login', component: LoginComponent },
   { path: 'sign-up', component: SignUpComponent },
+  { path: 'verificacion', component: VerificacioncorreoComponent,canActivate: [AuthGuard] },
+  
   { 
     path: '', 
     component: EncabezadoComponent, 
@@ -32,6 +36,8 @@ const routes: Routes = [
       { path: 'inventarios', component: InventariosComponent,canActivate: [AuthGuard] },
       { path: 'misreservas', component: MisreservasComponent,canActivate: [AuthGuard] },
       { path: 'notificaciones', component: NotificacionesComponent,canActivate: [AuthGuard] },
+      
+
     
       
     ]

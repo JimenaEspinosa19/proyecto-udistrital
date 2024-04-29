@@ -11,6 +11,7 @@ import { LoginComponent } from './components/login/login.component';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AngularFireModule } from '@angular/fire/compat';
+
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
@@ -31,6 +32,10 @@ import { MisreservasComponent } from './components/misreservas/misreservas.compo
 import { MatCardModule } from '@angular/material/card';
 import { RouterModule, Router } from '@angular/router';
 import { NotificacionesComponent } from './components/notificaciones/notificaciones.component';
+import { VerificacioncorreoComponent } from './components/verificacioncorreo/verificacioncorreo.component';
+import { GeolocalizacionComponent } from './components/geolocalizacion/geolocalizacion.component';
+
+
 
 @NgModule({
   declarations: [
@@ -45,6 +50,9 @@ import { NotificacionesComponent } from './components/notificaciones/notificacio
     RegistrarComponent,
     MisreservasComponent,
     NotificacionesComponent,
+    VerificacioncorreoComponent,
+    GeolocalizacionComponent,
+  
     
   ],
   imports: [
