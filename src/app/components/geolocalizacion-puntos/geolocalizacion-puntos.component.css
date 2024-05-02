@@ -1,0 +1,64 @@
+.content {
+    color: rgb(4, 4, 4);
+    background-color: #f3ecec;
+    padding: 20px;
+  }
+  
+  h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  button {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-bottom: 10px;
+    cursor: pointer;
+  }
+  
+  .button:hover {
+    background-color: #45a049;
+  }
+  
+  .formulario {
+    margin-top: 20px;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .inputPlaces {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .mapa {
+    height: 300px;
+    background-color: #ddd; 
+    border-radius: 4px;
+    margin-top: 10px;
+  }
+  
+  .boton-azul {
+    background-color: #053c7a;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-right: 10px; 
+    border-radius: 5px; 
+  }
+  
+  .boton-azul:hover {
+    background-color: #053c7a; 
+  }
+  

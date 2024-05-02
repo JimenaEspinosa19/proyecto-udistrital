@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from 'src/app/shared/services/data.service';
+import { AuthService } from 'src/app/shared/services/auth.service';
 
 @Component({
   selector: 'app-notificaciones',
@@ -14,26 +15,44 @@ export class NotificacionesComponent implements OnInit {
   nmedicamento: string = '';
   entidad: string = '';
   direccionSeleccionada: string = '';
-  fechaReserva: string = '';
-  horaReserva: string = '';
   mensajeDisponibilidad: string = '';
+  userEmail: string | null = '';
 
-  constructor(private dataService: DataService) { } 
+
+  constructor(private dataService: DataService, private authService: AuthService) { } 
 
   ngOnInit(): void {
-    const datosCliente = this.dataService.getDatosCliente();
-    console.log("Datos recuperados en ngOnInit del componente de reservas:", datosCliente);
-    if (datosCliente) {
+    this.authService.getUserEmail().subscribe(email => {
+      this.userEmail = email;
+    });
+
+      const datosCliente = this.dataService.getDatosCliente();
+      console.log("Datos recuperados en ngOnInit del componente de notificaciones:", datosCliente);
+      if (datosCliente) {
         this.nmedicamento = datosCliente.nmedicamento; 
         this.entidad = datosCliente.entidad;
+        this.direccionSeleccionada = datosCliente.direccionSeleccionada;
         this.cantidad = datosCliente.cantidad;
-        this.direccionSeleccionada = datosCliente.direcciones;
+        
+      }
     }
-}
+    
 
   async Notificacion() {
-    
-      
+    try {
+      await this.dataService.crearNotificacion({
+        nombreCliente: this.nombreCliente,
+        identificacion: this.identificacion,
+        nmedicamento: this.nmedicamento,
+        cantidad: this.cantidad,
+        entidad: this.entidad,
+        direccionSeleccionada: this.direccionSeleccionada
+      });
+      console.log('Datos de notificación guardados correctamente en Firebase.');
+      this.mensajeDisponibilidad = 'Notificación enviada correctamente.';
+    } catch (error) {
+      console.error('Error al guardar datos de notificación en Firebase:', error);
+      this.mensajeDisponibilidad = 'Error al enviar la notificación.';
+    }
   }
 }
-

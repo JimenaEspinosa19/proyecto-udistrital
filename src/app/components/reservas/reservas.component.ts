@@ -27,7 +27,7 @@ export class ReservasComponent implements OnInit {
         this.nmedicamento = datosCliente.nmedicamento; 
         this.entidad = datosCliente.entidad;
         this.cantidad = datosCliente.cantidad;
-        this.direccionSeleccionada = datosCliente.direcciones;
+        this.direccionSeleccionada = datosCliente.direccionSeleccionada;
     }
 }
 

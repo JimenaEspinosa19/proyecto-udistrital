@@ -1,0 +1,37 @@
+<div class="content mat-elevation-z8" style="color: rgb(4, 4, 4); background-color: #f3ecec;">
+    <div class="max-w-8xl mx-auto bg-white p-6 shadow-md rounded-md">
+      <h2 class="text-xl font-semibold mb-4">Direcciones donde está disponible el medicamento</h2>
+      <table class="w-full divide-y divide-gray-200 text-lg">
+        <thead class="bg-gray-50">
+          <tr>
+            <th scope="col" class="px-6 py-3 text-left font-light text-gray-700 uppercase tracking-wider">Dirección</th>
+            <th scope="col" class="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Medicamento</th>
+            <th scope="col" class="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Cantidad</th>
+            <th scope="col" class="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Ciudad</th>
+            <th scope="col" class="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Entidad</th>
+            <th scope="col" class="px-6 py-3"></th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <tr *ngFor="let direccion of direccionesDisponibles">
+            <td class="px-6 py-4 whitespace-nowrap">{{ direccion.direccion }}</td>
+            <td class="px-6 py-4 whitespace-nowrap">{{ direccion.nmedicamento }}</td>
+            <td class="px-6 py-4 whitespace-nowrap">{{ direccion.cantidad }}</td>
+            <td class="px-6 py-4 whitespace-nowrap">{{ direccion.ciudad }}</td>
+            <td class="px-6 py-4 whitespace-nowrap">{{ direccion.entidad }}</td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <button (click)="guardarDireccionSeleccionada(direccion)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Seleccionar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <br>
+      <br>
+      <button (click)="volverAMedicamentos()" class="bg-blue-600 text-white px-3 py-2 rounded-md text-sm flex justify-center">
+        Volver
+      </button>
+    </div>
+  </div>
+  

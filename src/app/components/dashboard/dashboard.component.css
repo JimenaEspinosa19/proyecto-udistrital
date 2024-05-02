@@ -1,13 +1,15 @@
+
 mat-toolbar {
-  background: #0d67cf;
+  background: #004a9f;
   color: white;
 }
+
 
 mat-sidenav {
   margin: 16px;
   width: 200px;
   border-right: none;
-  background: #053c7a;
+  background: #002b5c;
   color: white;
   border-radius: 10px;
   padding: 16px;
@@ -15,7 +17,7 @@ mat-sidenav {
 }
 
 .content {
-  height: calc(100vh - 98px);
+  height: calc(100vh - 100px);
   border-radius: 10px;
   margin: 16px;
   margin-left: 32px;
@@ -25,92 +27,87 @@ mat-sidenav {
   align-items: center;
 
   font-size: 2rem;
-  color: lightgray;
+  color: rgb(62, 87, 227);
 }
 
-mat-sidenav-container {
-  height: calc(100vh - 65px);
-  background-color: #ffffff
-}
-
-
-.menu-button {
-  width: 100%;
+.info-container {
   display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  font-size: 1rem;
-
-  mat-icon {
-    margin-right: 8px;
-  }
+  flex-wrap: nowrap;
+  justify-content: space-around;
 }
 
-.avatar {
-  margin-top: 16px;
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
+.info-box {
+  flex: 1;
+  margin: 10px;
+  padding: 20px;
+  background-color: white;
+  border: 1px solid #ccc;
 }
 
-.name {
-  margin-top: 8px;
-  font-weight: normal;
+.info-box h2 {
+  text-align: center;
+  color: #007bff;
 }
 
-.designation {
-  margin-top: 2px;
-  font-size: 0.7rem;
-  color: lightgrey;
+.info-box p, .info-box ul {
+  text-align: justify;
+  margin-top: 10px;
 }
 
-mat-divider {
-  margin-top: 16px;
-  margin-bottom: 16px;
-  background-color: rgba(90, 51, 221, 0.5);
+.info-box ul {
+  padding-left: 20px;
 }
 
-mat-toolbar {
-        display: flex;
-        justify-content: space-between;
-      }
 
-      .container {
-        display: flex;
-        align-items: center;
-      }
+.info-box ul {
+  padding-left: 20px;
+}
 
-      .navbar-brand {
-        font-weight: bold;
-        color: white;
-        text-decoration: none;
-        margin-right: 20px;
-      }
 
-      .navbar-nav {
-        display: flex;
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-      }
 
-      .nav-item {
-        margin-right: 10px;
-      }
 
-      .avatar-container {
-        display: flex;
-        justify-content: center; /* Centra horizontalmente */
-        align-items: center; /* Centra verticalmente */
-        height: 20%; /* Ajusta la altura del contenedor */
-      }
-      
-      .example-card {
-        max-width: 400px;
-        margin-bottom: 8px;
-      }
 
-      .inicio-card {
-        background-color: #053c7a;
-        color: white; /* Cambia el color del texto a blanco */
-      }
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background-color: #053c7a;
+  color: white;
+  text-align: center;
+  padding: 20px 0;
+}
+
+header h1 {
+  margin: 0;
+}
+
+section {
+  padding: 20px;
+}
+
+section h2 {
+  color: #4CAF50;
+}
+
+section p, section ul {
+  font-size: 16px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+footer {
+  background-color: #f2f2f2;
+  padding: 20px;
+  text-align: center;
+}
+
+footer h2 {
+  color: #4CAF50;
+}

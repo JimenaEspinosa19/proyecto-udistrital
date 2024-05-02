@@ -2,6 +2,8 @@ import { Injectable, NgZone } from '@angular/core';
 import { GoogleAuthProvider } from '@angular/fire/auth';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +17,8 @@ export class AuthService {
   constructor(
     private firebaseAuthenticationService: AngularFireAuth,
     private router: Router,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private afAuth: AngularFireAuth
 
 
     
@@ -121,6 +124,9 @@ export class AuthService {
     })
   }
 
+  getUserEmail(): Observable<string | null> {
+    return this.afAuth.authState.pipe(map(user => user ? user.email : null));
+  }
   
 
 }

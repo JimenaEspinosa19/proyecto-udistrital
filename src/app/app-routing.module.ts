@@ -12,10 +12,12 @@ import { InventariosComponent } from './components/inventarios/inventarios.compo
 import { MisreservasComponent } from './components/misreservas/misreservas.component';
 import { NotificacionesComponent } from './components/notificaciones/notificaciones.component';
 import { VerificacioncorreoComponent } from './components/verificacioncorreo/verificacioncorreo.component';
-
-
-
-
+import { GeolocalizacionComponent } from './components/geolocalizacion/geolocalizacion.component';
+import { ProximosaVencerComponent } from './components/proximosa-vencer/proximosa-vencer.component';
+import { MedicamentosvencerComponent } from './components/medicamentosvencer/medicamentosvencer.component';
+import { DoblefactorComponent } from './components/doblefactor/doblefactor.component';
+import { PuntoscercanosComponent } from './components/puntoscercanos/puntoscercanos.component';
+import { GeolocalizacionPuntosComponent } from './components/geolocalizacion-puntos/geolocalizacion-puntos.component';
 
 
 
@@ -24,7 +26,8 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'sign-up', component: SignUpComponent },
   { path: 'verificacion', component: VerificacioncorreoComponent,canActivate: [AuthGuard] },
-  
+  { path: 'doblefactor', component: DoblefactorComponent,canActivate: [AuthGuard] },
+
   { 
     path: '', 
     component: EncabezadoComponent, 
@@ -36,9 +39,11 @@ const routes: Routes = [
       { path: 'inventarios', component: InventariosComponent,canActivate: [AuthGuard] },
       { path: 'misreservas', component: MisreservasComponent,canActivate: [AuthGuard] },
       { path: 'notificaciones', component: NotificacionesComponent,canActivate: [AuthGuard] },
-      
-
-    
+      {path: 'localizacion', component: GeolocalizacionComponent,canActivate: [AuthGuard] },
+      {path: 'vencimiento', component: ProximosaVencerComponent, canActivate: [AuthGuard] },
+      {path: 'proximosvencer', component: MedicamentosvencerComponent, canActivate: [AuthGuard] },
+      {path: 'otrospuntos', component: PuntoscercanosComponent, canActivate: [AuthGuard] },
+      {path: 'localizacion2', component: GeolocalizacionPuntosComponent,canActivate: [AuthGuard] },
       
     ]
   },

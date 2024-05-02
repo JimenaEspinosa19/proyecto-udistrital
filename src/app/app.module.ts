@@ -34,6 +34,12 @@ import { RouterModule, Router } from '@angular/router';
 import { NotificacionesComponent } from './components/notificaciones/notificaciones.component';
 import { VerificacioncorreoComponent } from './components/verificacioncorreo/verificacioncorreo.component';
 import { GeolocalizacionComponent } from './components/geolocalizacion/geolocalizacion.component';
+import { ProximosaVencerComponent } from './components/proximosa-vencer/proximosa-vencer.component';
+import { MedicamentosvencerComponent } from './components/medicamentosvencer/medicamentosvencer.component';
+import { DoblefactorComponent } from './components/doblefactor/doblefactor.component';
+import { PuntoscercanosComponent } from './components/puntoscercanos/puntoscercanos.component';
+import { GeolocalizacionPuntosComponent } from './components/geolocalizacion-puntos/geolocalizacion-puntos.component';
+
 
 
 
@@ -52,6 +58,12 @@ import { GeolocalizacionComponent } from './components/geolocalizacion/geolocali
     NotificacionesComponent,
     VerificacioncorreoComponent,
     GeolocalizacionComponent,
+    ProximosaVencerComponent,
+    MedicamentosvencerComponent,
+    DoblefactorComponent,
+    PuntoscercanosComponent,
+    GeolocalizacionPuntosComponent,
+
   
     
   ],

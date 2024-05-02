@@ -1,0 +1,36 @@
+
+<div class="content mat-elevation-z8" style="color: rgb(4, 4, 4); background-color: #f3ecec;">
+    <div class="content mat-elevation-z8">
+        <h1>Valida rutas y tiempo estimado de tu viaje</h1>
+
+        <button class="boton-azul" (click)="mapRuta()">Calcular ruta</button>
+        <button class="boton-azul" (click)="volver()">Volver</button>
+        <div>
+            <p>Distancia: {{ distancia }}</p>
+            <p>Tiempo estimado: {{ tiempoEstimado }}</p>
+        </div>
+
+        <div class="formulario">
+            <form (ngSubmit)="onSubmit()">
+                <div class="form panel">
+
+                    <div>
+                        <button type="button" class="boton-azul" (click)="seleccionarModo('DRIVING')">
+                            <mat-icon>directions_car</mat-icon>
+                        </button>
+                        <button type="button" class="boton-azul" (click)="seleccionarModo('WALKING')">
+                            <mat-icon>directions_walk</mat-icon>
+                        </button>
+                        <button type="button" class="boton-azul" (click)="seleccionarModo('TRANSIT')">
+                            <mat-icon>directions_transit</mat-icon>
+                        </button>
+                    </div>
+
+                </div>
+
+                <div class="mapa" #divMap></div>
+            </form>
+        </div>
+
+    </div>
+</div>

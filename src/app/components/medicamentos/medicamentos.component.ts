@@ -15,6 +15,8 @@ export class MedicamentosComponent implements OnInit {
 
   medicamentoDisponible: boolean = false;
   mensajeDisponibilidad: string = '';
+  mensajeError: string = '';
+  direccionSeleccionadaSeleccionada: boolean = false;
   Nombre: string = '';
   ciudad: string = ''; 
   medicamentos: any[] = [];
@@ -41,16 +43,32 @@ export class MedicamentosComponent implements OnInit {
 
   async ngOnInit() {
     await this.loadCiudades();
-    
+    if (this.ciudades.length > 0) {
+      const primeraCiudad = this.ciudades[0];
+      await this.actualizarEntidadesYDirecciones(primeraCiudad);
+    }
     this.medicamentosFiltrados = this.medicamentoControl.valueChanges.pipe(
       startWith(''),
       map(value => this.filterMedicamentos(value))
     );
-
-
     this.opcionesMedicamentos = await this.dataService.getMedicamentos(); 
   }
-
+  
+  async actualizarEntidadesYDirecciones(ciudad: string) {
+    this.ciudad = ciudad;
+    this.epsSeleccionada = await this.dataService.getEPSByCiudad(ciudad);
+    if (this.epsSeleccionada.length > 0) {
+      await this.onChangeEPS(this.epsSeleccionada[0]);
+    }
+    if (this.entidades.length > 0) {
+      this.entidad = this.entidades[0]; 
+      await this.updateDireccionesFiltradas(); // Esperar a que se actualicen las direcciones
+      if (this.direccionesFiltradas.length > 0) {
+        this.direccionSeleccionada = this.direccionesFiltradas[0]; // Seleccionar la primera dirección
+      }
+    }
+  }
+  
   async loadCiudades() {
     this.ciudades = await this.dataService.getCiudades();
   }
@@ -58,10 +76,14 @@ export class MedicamentosComponent implements OnInit {
   private filterMedicamentos(value: string): any[] {
     const filterValue = value.toLowerCase();
     if (!filterValue || !this.opcionesMedicamentos) {      
-      return [];
+        return [];
     }
-    return this.opcionesMedicamentos.filter(option => option.Nombre.toLowerCase().includes(filterValue));
-  }
+    // Limitar el número de elementos a mostrar
+    const MAX_MEDICAMENTOS = 3; // Define el número máximo de medicamentos a mostrar
+    const medicamentosFiltrados = this.opcionesMedicamentos.filter(option => option.Nombre.toLowerCase().includes(filterValue));
+    return medicamentosFiltrados.slice(0, MAX_MEDICAMENTOS); // Devuelve solo los primeros MAX_MEDICAMENTOS elementos
+}
+
 
   selectMedicamento(medicamento: any) {
     this.Nombre = medicamento.Nombre; 
@@ -69,49 +91,51 @@ export class MedicamentosComponent implements OnInit {
   }
 
   async buscarMedicamento() { 
-    console.log('Nombre del medicamento:', this.nmedicamento);
-    console.log('Entidad:', this.entidad);
-    console.log('Direcciones:', this.direccionSeleccionada);
-    console.log('Ciudad:', this.ciudad);
-    console.log('Cantidad:', this.cantidad); 
+    if (!this.nmedicamento || !this.entidad || !this.direccionSeleccionada || !this.ciudad || !this.cantidad) {
+      this.mensajeError = 'Todos los campos deben estar llenos.';
+      console.log('Todos los campos deben estar llenos.');
+      return; 
+    }
 
-    
     const cantidadNumerica = parseInt(this.cantidad);
     console.log('CANTIDAD FINAL', cantidadNumerica)
 
-   
     if (isNaN(cantidadNumerica) || cantidadNumerica <= 0) {
-        console.log('La cantidad ingresada no es válida.');
-        return; 
+      this.mensajeError = 'La cantidad del medicamento no es valida,';
+      console.log('La cantidad ingresada no es válida.');
+      return; 
     }
 
     const direccion = this.direccionSeleccionada;
     const medicamentos = await this.dataService.getMedicamentosTodos();
 
     const medicamentoExistente = medicamentos.find(medicamento =>
-        medicamento['nmedicamento'] === this.nmedicamento &&
-        medicamento['direcciones'].includes(this.direccionSeleccionada) && 
-        medicamento['entidad'] === this.entidad &&
-        medicamento['ciudad'] === this.ciudad
+      medicamento['nmedicamento'] === this.nmedicamento &&
+      medicamento['direcciones'].includes(this.direccionSeleccionada) && 
+      medicamento['entidad'] === this.entidad &&
+      medicamento['ciudad'] === this.ciudad
     );
 
     if (medicamentoExistente) {
       if (medicamentoExistente['cantidad'] >= cantidadNumerica) {
-          this.dataService.setDatosCliente(this.nmedicamento, this.entidad, this.direccionSeleccionada, this.cantidad);
+        this.dataService.setDatosCliente(this.nmedicamento, this.entidad, this.direccionSeleccionada, this.cantidad, this.ciudad);
   
-          this.medicamentoDisponible = true;
-          this.mensajeDisponibilidad = 'El medicamento está disponible en esta dirección y ciudad.';
+        this.medicamentoDisponible = true;
+        this.mensajeDisponibilidad = 'El medicamento está disponible en esta dirección y ciudad.';
       } else {
-          this.medicamentoDisponible = false;
-          this.mensajeDisponibilidad = 'El medicamento requerido no está disponible. ¿Qué acción desea realizar?';
-          this.mostrarBotonesNotificacionYPuntos = true; // Mostrar botones de notificación y otros puntos
+        this.dataService.setDatosCliente(this.nmedicamento, this.entidad, this.direccionSeleccionada, this.cantidad,this.ciudad);
+        this.medicamentoDisponible = false;
+        this.mensajeDisponibilidad = 'El medicamento requerido no está disponible. ¿Qué acción desea realizar?';
+        this.mostrarBotonesNotificacionYPuntos = true; 
+
       }
-  } else {
+    } else {
+      this.dataService.setDatosCliente(this.nmedicamento, this.entidad, this.direccionSeleccionada, this.cantidad,this.ciudad);
       this.medicamentoDisponible = false;
       this.mensajeDisponibilidad = 'El medicamento no está disponible en esta dirección y ciudad. ¿Qué acción desea realizar?';
-      this.mostrarBotonesNotificacionYPuntos = true; // Mostrar botones de notificación y otros puntos
+      this.mostrarBotonesNotificacionYPuntos = true; 
+    }
   }
-}
 
 
   async reservarMedicamento() {
@@ -124,38 +148,62 @@ export class MedicamentosComponent implements OnInit {
     console.log("Ciudad seleccionada:", this.ciudad); 
     if (this.ciudad) {
       this.epsSeleccionada = await this.dataService.getEPSByCiudad(this.ciudad);
-      this.onChangeEPS(this.eps); 
+      await this.onChangeEPS(this.epsSeleccionada[0]); 
+      await this.updateDireccionesFiltradas(); // Actualizar las direcciones filtradas
     }
   }
-
+  
+  
   async onChangeEPS(eps: string) {
     const ciudadSeleccionada = this.ciudad;
     this.entidades = await this.dataService.getEntidadesPorCiudadYEPS(ciudadSeleccionada, eps);
-    this.entidad = this.entidades[0]; 
-    this.direccionesFiltradas = await this.dataService.getDireccionesPorEntidadYCiudad(this.entidad, ciudadSeleccionada);
+    if (this.entidades.length > 0) {
+      this.entidad = this.entidades[0]; 
+      await this.updateDireccionesFiltradas();
+    }
   }
+  
   
 
   async updateDireccionesFiltradas() {
-    const ciudadSeleccionada = this.ciudad;
-    this.direccionesFiltradas = await this.dataService.getDireccionesPorEntidadYCiudad(this.entidad, ciudadSeleccionada);
+  if (this.entidad && this.ciudad) { // Verificar que tanto la entidad como la ciudad estén definidas
+    this.direccionesFiltradas = await this.dataService.getDireccionesPorEntidadYCiudad(this.entidad, this.ciudad);
   }
+}
+
 
   onChangeEntidad(entidad: string) {
     this.entidad = entidad;
     this.updateDireccionesFiltradas(); 
   }
 
-  async verUbicacion() {
-   
-  }
+  //
+     async verUbicacion() {
+    const ubicacion = this.direccionSeleccionada;
+    console.log('ubicacion seleccionada',ubicacion)
+    return (ubicacion)
+    
+    }
 
+  //
   solicitarNotificacion() {
     this.router.navigate(['/notificaciones']);
     
 }
+verOtrosPuntosCercanos() {
+  
+      this.router.navigate(['/otrospuntos']);
+    
+}
 
- verOtrosPuntosCercanos() {
+enviarDireccionALocalizacion() {
+
+  if (this.direccionSeleccionada) {
    
+    this.router.navigate(['/localizacion'], { state: { direccionSeleccionada: this.direccionSeleccionada } });
+  } else {
+    
+    console.log("No se ha seleccionado ninguna dirección.");
+  }
 }
 }

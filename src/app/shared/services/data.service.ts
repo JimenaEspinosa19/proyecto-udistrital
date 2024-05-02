@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/internal/Observable';
   providedIn: 'root'
 })
 export class DataService {
+  [x: string]: any;
   nmedicamento: string;
   cantidad: string;
   identificacion: number;
@@ -56,6 +57,11 @@ export class DataService {
     return snapshot.docs.map(doc => doc.data());
   }
 
+  async getEntregarapida() {
+    const snapshot = await getDocs(query(collection(this.firestore, 'Entrega rapida')));
+    return snapshot.docs.map(doc => doc.data());
+  }
+
 
   async searchMedicamentos(nombre: string) {
     const querySnapshot = await getDocs(query(collection(this.firestore, 'Nombre medicamentos'), where('Nombre', '>=', nombre.toLowerCase()), where('Nombre', '<=', nombre.toLowerCase() + '\uf8ff')));
@@ -68,21 +74,21 @@ export class DataService {
   }
 
 
-  setDatosCliente(nmedicamento: string, entidad: string, direccionSeleccionada: string, cantidad: string) {
+  setDatosCliente(nmedicamento: string, entidad: string, direccionSeleccionada: string, cantidad: string, ciudad: string) {
     this.nmedicamento = nmedicamento;
     this.entidad = entidad;
-    this.direcciones = direccionSeleccionada;
+    this.direccionSeleccionada = direccionSeleccionada; 
     this.cantidad = cantidad;
+    this.ciudad = ciudad;
   }
   
-
   getDatosCliente() {
-    
     return {
       nmedicamento: this.nmedicamento,
       entidad: this.entidad,
-      direcciones: this.direcciones,
-      cantidad: this.cantidad
+      direccionSeleccionada: this.direccionSeleccionada, 
+      cantidad: this.cantidad,
+      ciudad: this.ciudad
     };
   }
 
@@ -358,8 +364,74 @@ async getPacientes() {
       console.error('Error al eliminar el medicamento de la base de datos:', error);
     }
   }
+
+  async eliminarMedicamentoVencer(reservaData: any): Promise<void> {
+
+
+    const {nombre, cantidad, fechaVencimiento ,telefono} = reservaData;
+    
+
+    try {
+      const querySnapshot = await getDocs(
+        query(collection(this.firestore, 'Entrega rapida'), 
+        where('nombre', '==', nombre),
+        where('cantidad', '==', cantidad),
+        where('fechaVencimiento', '==', fechaVencimiento),
+        where('telefono', '==', telefono)),
+      
+      );
   
+      querySnapshot.forEach(doc => {
+        deleteDoc(doc.ref);
+      });
+      console.log('Medicamento eliminado correctamente de la base de datos');
+    } catch (error) {
+      console.error('Error al eliminar el medicamento de la base de datos:', error);
+    }
+  }
+
+
+  async agregarMedicamento(nombre: string, cantidad: number, fechaVencimiento: string, telefono: string) {
+    try {
+      const docRef = await addDoc(collection(this.firestore, 'Entrega rapida'), {
+        nombre: nombre,
+        cantidad: cantidad,
+        fechaVencimiento: fechaVencimiento,
+        telefono: telefono
+      });
+      console.log('Medicamento agregado con ID: ', docRef.id);
+      return docRef.id;
+    } catch (e) {
+      console.error('Error al agregar medicamento: ', e);
+      throw e;
+    }
+  }
+
+  async crearNotificacion(data: any) {
+    try {
+      await addDoc(collection(this.firestore, 'Notificaciones'), data);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getPuntosCercanosDisponibles(ciudad: string, entidad: string, cantidad: number) {
+    const querySnapshot = await getDocs(
+      query(collection(this.firestore, 'Medicamentos'), 
+        where('nmedicamento', '==', this.nmedicamento),
+        where('ciudad', '==', ciudad),
+        where('entidad', '==', entidad),
+        where('cantidad', '>=', cantidad)
+      )
+    );
+    
+    const direccionesDisponibles: string[] = [];
+    querySnapshot.forEach(doc => {
+      const direccion = doc.data()['direccion'];
+      direccionesDisponibles.push(direccion);
+    });
+  
+    return direccionesDisponibles;
+  }
+
 }
-
-
-
