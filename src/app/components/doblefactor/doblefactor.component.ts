@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-declare const gapi: any;
-
+import { HttpClient } from '@angular/common/http';
+import { AuthService } from 'src/app/shared/services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-doblefactor',
@@ -8,44 +9,58 @@ declare const gapi: any;
   styleUrls: ['./doblefactor.component.css']
 })
 export class DoblefactorComponent implements OnInit {
+  constructor(private http: HttpClient, private authService: AuthService, private router: Router) { } 
 
-  ngOnInit() {
-    gapi.load('client:auth2', () => {
-      gapi.client.init({
-        clientId: '795814791107-mufjpht6dbquk1qr1ko5p53ghkelsptf.apps.googleusercontent.com', 
-        discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest'],
-        scope: 'https://www.googleapis.com/auth/gmail.send'
-      }).then(() => {
-        
-      });
+  userEmail: string | null = '';
+  verificationCode: string = ''; 
+  userEnteredCode: string = ''; 
+  isCodeCorrect: boolean = true; 
+
+  ngOnInit(): void {
+    this.authService.getUserEmail().subscribe(email => {
+      this.userEmail = email;
     });
   }
 
-  sendEmail() {
-    const headers = {
-      'To': 'dornige.jimena@gmail.com',
-      'Subject': 'Hola',
+  async Enviar() {
+    
+    this.verificationCode = this.generateVerificationCode();
+
+    const asunto = 'Codigo de verificación para ingreso a DispenAPP';
+    const cuerpo = `El código de verificación de tu cuenta es: ${this.verificationCode}`;
+    const correodata = {
+      to: this.userEmail,
+      subject: asunto,
+      message: cuerpo
     };
-    const message = [
-      'Content-Type: text/plain; charset="UTF-8"\r\n',
-      'MIME-Version: 1.0\r\n',
-      'Content-Transfer-Encoding: 7bit\r\n',
-      'to: dornige.jimena@gmail.com\r\n',
-      'subject: Asunto del correo\r\n\r\n',
 
-      'Contenido del correo aquí.'
-    ].join('');
+    this.http.post<any>('https://us-central1-proyecto-final-8e4e0.cloudfunctions.net/mailer', correodata)
+      .subscribe(
+        response => {
+          console.log('Correo enviado', response);
+          
+        },
+        error => {
+          console.log('Error al enviar correo', error);
+        }
+      );
+  }
 
-    const encodedMessage = btoa(message).replace(/\+/g, '-').replace(/\//g, '_');
-    const request = gapi.client.gmail.users.messages.send({
-      'userId': 'me',
-      'resource': {
-        'raw': encodedMessage
-      }
-    });
+  generateVerificationCode(): string {
+   
+    return Math.floor(100000 + Math.random() * 900000).toString();
+  }
 
-    request.execute((response: any) => {
-      console.log(response);
-    });
+  verificarCodigo() {
+    if (this.userEnteredCode === this.verificationCode) {
+      
+      this.isCodeCorrect = true;
+      this.router.navigate(['/dashboard']);
+      console.log('Código correcto. Redirigiendo al dashboard...');
+    } else {
+      
+      this.isCodeCorrect = false;
+      console.log('Código incorrecto. Por favor, intenta de nuevo.');
+    }
   }
 }

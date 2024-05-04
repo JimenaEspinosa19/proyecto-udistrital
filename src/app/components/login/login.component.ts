@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthService } from 'src/app/shared/services/auth.service';
+import { HttpClient } from '@angular/common/http';
+
 
 @Component({
   selector: 'app-login',
@@ -9,14 +11,20 @@ import { AuthService } from 'src/app/shared/services/auth.service';
 export class LoginComponent {
 
   isLoginPage: boolean = true;
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService,private http: HttpClient) {
 
   }
 
-  login() {
+  userEmail: string | null = '';
+  verificationCode: string = ''; 
+  userEnteredCode: string = ''; 
 
-    this.isLoginPage = false; 
+  ngOnInit(): void {
+    this.authService.getUserEmail().subscribe(email => {
+      this.userEmail = email;
+    });
   }
+
 
   logIn(email: string, password: string) {
     this.authService.logInWithEmailAndPassword(email, password);
@@ -25,4 +33,34 @@ export class LoginComponent {
   logInWithGoogle() {
     this.authService.logInWithGoogleProvider();
   }
+
+  async Enviar(){
+    // Generar un código de verificación temporal
+    this.verificationCode = this.generateVerificationCode();
+
+    const asunto = 'Tu medicamento ya está disponible';
+    const cuerpo = `El código de verificación de tu cuenta es: ${this.verificationCode}`;
+    const correodata = {
+      to: this.userEmail,
+      subject: asunto,
+      message: cuerpo
+    };
+
+    this.http.post<any>('https://us-central1-proyecto-final-8e4e0.cloudfunctions.net/mailer', correodata)
+      .subscribe(
+        response => {
+          console.log('Correo enviado', response);
+          
+        },
+        error => {
+          console.log('Error al enviar correo', error);
+        }
+      );
+  }
+
+  generateVerificationCode(): string {
+
+    return Math.floor(100000 + Math.random() * 900000).toString();
+  }
+
 }

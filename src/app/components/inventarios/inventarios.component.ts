@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from 'src/app/shared/services/data.service';
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-inventario',
   templateUrl: './inventarios.component.html',
@@ -11,8 +11,19 @@ export class InventariosComponent implements OnInit {
   medicamentosFiltrados: any[] = [];
   medicamentosF: any[] =[];
   terminoBusqueda: string = '';
+  cantidad: string = '';
+  entidad: string = '';
+  ciudad: string = '';
+  nmedicamento: string = '';
 
-  constructor(private dataService: DataService) { }
+  direcciones: string ="";
+  opcionesMedicamentos: any[] = []; 
+
+  ciudades: string[] = []; 
+  entidades: string[] = [];
+
+
+  constructor(private dataService: DataService, private router: Router) { }
 
   ngOnInit(): void {
     this.cargarMedicamentos();
@@ -53,6 +64,12 @@ export class InventariosComponent implements OnInit {
       } else {
         console.error('Los datos del medicamento son undefined');
       }
+    }
+
+    ModificarMedicamento(nmedicamento: string, entidad: string, direccionSeleccionada: string, cantidad: string, ciudad: string) {
+      this.dataService.setDatosCliente(nmedicamento, entidad, direccionSeleccionada, cantidad, ciudad);
+      console.log("Datos del medicamento seleccionado:", nmedicamento, entidad, this.direcciones, cantidad, ciudad);
+      this.router.navigate(['/modificarinventario']);
     }
   }
   

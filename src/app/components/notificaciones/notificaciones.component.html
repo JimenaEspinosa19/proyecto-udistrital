@@ -27,6 +27,11 @@
           <label class="block text-gray-700 text-sm font-bold mb-2" for="cantidad">Cantidad:</label>
           <input class="w-full px-3 py-2 border rounded-md text-sm" type="text" id="cantidad" [(ngModel)]="cantidad" name="cantidad" disabled>
         </div>
+
+        <div class="mb-4">
+          <label class="block text-gray-700 text-sm font-bold mb-2" for="ciudad">Ciudad:</label>
+          <input class="w-full px-3 py-2 border rounded-md text-sm" type="text" id="ciudad" [(ngModel)]="ciudad" name="ciudad" disabled>
+        </div>
   
         <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="entidad">Entidad:</label>
@@ -39,7 +44,7 @@
         </div>
   
         <div class="flex justify-center">
-          <button type="button" (click)="Notificacion()" class="bg-blue-600 text-white px-10 py-1 rounded-md text-sm">Notificacion</button>
+          <button type="button" (click)="Notificacion()"  (click)="Enviar()" class="bg-blue-600 text-white px-10 py-1 rounded-md text-sm">Notificacion</button>
         </div>
   
         <div *ngIf="mensajeDisponibilidad !== ''" class="text-blue-600 text-xs mt-2 flex justify-center">

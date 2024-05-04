@@ -1,10 +1,23 @@
 <mat-toolbar color="accent">DispenAPP</mat-toolbar>
-    
+
 <div class="wrapper">
     <div class="body">
-        <h6>Le enviamos un código para autenticarse, revise su correo</h6>
-        <div class="d-grid gap-2 mt-3">
-            <button type="button" class="btn btn-primary btn-lg" (click)="sendEmail()">Reenviar Código</button>
+        <h6>Para ingresar, enviaremos un código de verificación a su correo</h6>
+        <div>
+            <button type="submit" class="btn btn-primary btn-lg" (click)="Enviar()">Enviar</button>
         </div>
     </div>
+
+    <div>
+        <form *ngIf="verificationCode" (ngSubmit)="verificarCodigo()">
+            <input type="text" [(ngModel)]="userEnteredCode" name="verificationCode" class="max-w-20xl px-3 py-2 border rounded-md text-sm" placeholder="código de verificación">
+            <br><br><br>
+            <button type="submit" class="btn btn-primary btn-lg">Verificar</button>
+        </form>
+    </div>
+ 
+    <div *ngIf="!isCodeCorrect" class="error-message">
+        <br>
+        Código incorrecto. Por favor, intenta de nuevo.
+      </div>
 </div>

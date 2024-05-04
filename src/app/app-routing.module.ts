@@ -18,6 +18,7 @@ import { MedicamentosvencerComponent } from './components/medicamentosvencer/med
 import { DoblefactorComponent } from './components/doblefactor/doblefactor.component';
 import { PuntoscercanosComponent } from './components/puntoscercanos/puntoscercanos.component';
 import { GeolocalizacionPuntosComponent } from './components/geolocalizacion-puntos/geolocalizacion-puntos.component';
+import { ModificarinventarioComponent } from './components/modificarinventario/modificarinventario.component';
 
 
 
@@ -44,6 +45,7 @@ const routes: Routes = [
       {path: 'proximosvencer', component: MedicamentosvencerComponent, canActivate: [AuthGuard] },
       {path: 'otrospuntos', component: PuntoscercanosComponent, canActivate: [AuthGuard] },
       {path: 'localizacion2', component: GeolocalizacionPuntosComponent,canActivate: [AuthGuard] },
+      {path: 'modificarinventario', component:ModificarinventarioComponent ,canActivate: [AuthGuard] },
       
     ]
   },

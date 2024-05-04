@@ -5,6 +5,7 @@ import { DataService } from 'src/app/shared/services/data.service';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-registrar',
@@ -28,12 +29,14 @@ export class RegistrarComponent {
   entidades: string[] = []
   medicamentosFiltrados!: Observable<any[]>;
   entidadesDirecciones: { [entidad: string]: string[] } = {};
+  userEmail: string | null = '';
   
 
   constructor(
     private authService: AuthService,
     private router: Router,
-    public dataService: DataService
+    public dataService: DataService,
+    private http: HttpClient
   ) {}
 
   ngOnInit() {
@@ -85,15 +88,51 @@ export class RegistrarComponent {
     );
 
     if (medicamentoExistente) {
-      medicamentoExistente['cantidad'] = parseInt(medicamentoExistente['cantidad']) + parseInt(cantidad);
-      await this.dataService.updateMedicament(medicamentoExistente); 
-      this.mensaje = `Se agregaron ${cantidad} medicamentos al existente. Total: ${medicamentoExistente['cantidad']}`;
-  } else {
-      await this.dataService.createmedicament(Nombre, cantidad, [this.direccionSeleccionada], entidad, this.ciudad);
-      this.mensaje = "Medicamento ingresado correctamente.";
-  }
-}
+        medicamentoExistente['cantidad'] = parseInt(medicamentoExistente['cantidad']) + parseInt(cantidad);
+        await this.dataService.updateMedicament(medicamentoExistente); 
+        this.mensaje = `Se agregaron ${cantidad} medicamentos al existente. Total: ${medicamentoExistente['cantidad']}`;
+    } else {
+        await this.dataService.createmedicament(Nombre, cantidad, [this.direccionSeleccionada], entidad, this.ciudad);
 
+       
+        try {
+            const notificaciones = await this.dataService.getNotificaciones();
+            const notificacionExistente = notificaciones.find(notificacion =>
+                notificacion['nombre'] === Nombre &&
+                notificacion['direccion'] === this.direccionSeleccionada &&
+                notificacion['entidad'] === entidad &&
+                notificacion['ciudad'] === this.ciudad &&
+                parseInt(notificacion['cantidad']) > 1
+            );
+
+            if (notificacionExistente) {
+                // Si hay coincidencias y la cantidad ingresada es mayor a 1, enviar el correo de notificación
+                const asunto = '¡Tu medicamento ya está disponible en DispenAPP!';
+                const cuerpo = `El medicamento ${Nombre} ya está disponible en la entidad ${entidad} y la dirección ${this.direccionSeleccionada}. Cantidad disponible: ${notificacionExistente['cantidad']} Reserva en DispenAPP`;
+                const correodata = {
+                    to: this.userEmail,
+                    subject: asunto,
+                    message: cuerpo
+                };
+                this.http.post<any>('https://us-central1-proyecto-final-8e4e0.cloudfunctions.net/mailer', correodata)
+                    .subscribe(
+                        response => {
+                            console.log('Correo de notificación enviado', response);
+                        },
+                        error => {
+                            console.log('Error al enviar correo de notificación', error);
+                        }
+                    );
+            } else {
+                this.mensaje = "No hay notificaciones para reportar.";
+            }
+        } catch (error) {
+            console.log('Error al obtener las notificaciones', error);
+        }
+
+        this.mensaje = "Medicamento ingresado correctamente.";
+    }
+}
 
     
   async actualizarDireccionesPorEntidad(entidad: string) {
@@ -131,5 +170,6 @@ async onChangeCiudad(event: any) {
     await this.actualizarDireccionesPorEntidadYCiudad(this.entidad, this.ciudad); 
   }
 }
+
 
 }

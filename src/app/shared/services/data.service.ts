@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { collection, query, where, getDocs, Firestore, addDoc, deleteDoc, doc, setDoc} from '@angular/fire/firestore';
+import { collection, query, where, getDocs, Firestore, addDoc, deleteDoc, doc, setDoc, updateDoc} from '@angular/fire/firestore';
 import { Observable } from 'rxjs/internal/Observable';
 
 @Injectable({
@@ -434,4 +434,41 @@ async getPacientes() {
     return direccionesDisponibles;
   }
 
-}
+  async modificarCantidadMedicamento(nmedicamento: string, ciudad: string, entidad: string, direcciones: string[], nuevaCantidad: number) {
+    try {
+      console.log("nmedicamento:", nmedicamento);
+      console.log("ciudad:", ciudad);
+      console.log("entidad:", entidad);
+      console.log("direcciones:", this.direccionSeleccionada);
+      console.log("nuevaCantidad:", nuevaCantidad);
+  
+      const q = query(collection(this.firestore, 'Medicamentos'), 
+        where('nmedicamento', '==', nmedicamento),
+        where('entidad', '==', entidad),
+        where('ciudad', '==', ciudad),
+        where('direcciones', '==', this.direccionSeleccionada)
+      );
+  
+      const querySnapshot = await getDocs(q);
+      console.log("querySnapshot:", querySnapshot);
+  
+      if (!querySnapshot.empty) {
+        const docRef = querySnapshot.docs[0].ref;
+        console.log("docRef:", docRef);
+        await setDoc(docRef, { cantidad: nuevaCantidad }, { merge: true });
+        console.log('Cantidad modificada en la base de datos.');
+      } else {
+        console.error('No se encontró ningún documento con los criterios especificados.');
+      }
+    } catch (error) {
+      console.error('Error al modificar la cantidad:', error);
+    }
+  }
+
+  async getNotificaciones() {
+    const snapshot = await getDocs(query(collection(this.firestore, 'Notificaciones')));
+    return snapshot.docs.map(doc => doc.data());
+  }
+
+  
+}  

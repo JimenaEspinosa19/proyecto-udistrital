@@ -44,7 +44,7 @@ export class AuthService {
         if (user) {
           if (user.emailVerified) {
          
-            this.router.navigate(['/dashboard']);
+            this.router.navigate(['doblefactor']);
           } else {
       
             console.log("Usuario autenticado pero no verificado, redireccionando a verificar correo");

@@ -39,6 +39,8 @@ import { MedicamentosvencerComponent } from './components/medicamentosvencer/med
 import { DoblefactorComponent } from './components/doblefactor/doblefactor.component';
 import { PuntoscercanosComponent } from './components/puntoscercanos/puntoscercanos.component';
 import { GeolocalizacionPuntosComponent } from './components/geolocalizacion-puntos/geolocalizacion-puntos.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ModificarinventarioComponent } from './components/modificarinventario/modificarinventario.component';
 
 
 
@@ -63,6 +65,7 @@ import { GeolocalizacionPuntosComponent } from './components/geolocalizacion-pun
     DoblefactorComponent,
     PuntoscercanosComponent,
     GeolocalizacionPuntosComponent,
+    ModificarinventarioComponent,
 
   
     
@@ -82,6 +85,7 @@ import { GeolocalizacionPuntosComponent } from './components/geolocalizacion-pun
     ReactiveFormsModule,
     MatCardModule,
     RouterModule,
+    HttpClientModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideFirestore(() => getFirestore()),
     provideAuth(() => getAuth()),
