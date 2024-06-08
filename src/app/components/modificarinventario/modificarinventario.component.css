@@ -1,76 +1,108 @@
 mat-toolbar {
-    background: #0d67cf;
-    color: white;
-  }
-  
-  mat-sidenav {
-    margin: 16px;
-    width: 200px;
-    border-right: none;
-    background: #053c7a;
-    color: white;
-    border-radius: 10px;
-    padding: 16px;
-    text-align: center;
-  }
-  
+  background: #0d67cf;
+  color: white;
+}
+
+mat-sidenav {
+  margin: 16px;
+  width: 200px;
+  border-right: none;
+  background: #053c7a;
+  color: white;
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+}
+
+.content {
+  height: calc(100vh - 98px);
+  border-radius: 10px;
+  margin: 16px;
+  margin-left: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  color: rgb(0, 0, 0);
+  background-color: #f6eeee;
+}
+
+mat-sidenav-container {
+  height: calc(100vh - 65px);
+  background-color: #ffffff;
+}
+
+.menu-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 1rem;
+}
+
+mat-icon {
+  margin-right: 8px;
+}
+
+.avatar {
+  margin-top: 16px;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+
+.name {
+  margin-top: 8px;
+  font-weight: normal;
+}
+
+.designation {
+  margin-top: 2px;
+  font-size: 0.7rem;
+  color: lightgrey;
+}
+
+mat-divider {
+  margin-top: 16px;
+  margin-bottom: 16px;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.fixed-table {
+  width: calc(100% - 48px);
+}
+
+/* Media queries para pantallas más pequeñas */
+@media (max-width: 1000px) {
   .content {
-    height: calc(100vh - 98px);
-    border-radius: 10px;
-    margin: 16px;
-    margin-left: 32px;
-  
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  
-    font-size: 2rem;
-    color: lightgray;
-  }
-  
-  mat-sidenav-container {
-    height: calc(100vh - 65px);
-    background-color: #ffffff
-  }
-  
-  
-  .menu-button {
-    width: 100%;
-    display: flex;
-    align-items: center;
+    margin: 8px;
+    margin-left: 16px;
+    height: auto;
     justify-content: flex-start;
-    font-size: 1rem;
-  
-    mat-icon {
-      margin-right: 8px;
-    }
+    align-items: flex-start;
   }
-  
+
+  .max-w-md {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+  }
+
+  .menu-button {
+    font-size: 0.875rem;
+  }
+
   .avatar {
-    margin-top: 16px;
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
+    width: 80px;
+    height: 80px;
   }
-  
-  .name {
+
+  .name, .designation {
+    font-size: 0.875rem;
+  }
+
+  button {
+    width: 100%;
     margin-top: 8px;
-    font-weight: normal;
   }
-  
-  .designation {
-    margin-top: 2px;
-    font-size: 0.7rem;
-    color: lightgrey;
-  }
-  
-  mat-divider {
-    margin-top: 16px;
-    margin-bottom: 16px;
-    background-color: rgba(255, 255, 255, 0.5);
-  }
-  
-  .fixed-table {
-    width: calc(100% - 48px); 
-        
-  }
+}

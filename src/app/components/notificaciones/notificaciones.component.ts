@@ -56,36 +56,15 @@ export class NotificacionesComponent implements OnInit {
       });
       console.log('Datos de notificación guardados correctamente en Firebase.');
       console.log(this.userEmail);
-      this.mensajeDisponibilidad = 'Notificación enviada correctamente.';
+      this.mensajeDisponibilidad = 'Se le notificará cuando el medicamento esté listo.';
     } catch (error) {
       console.error('Error al guardar datos de notificación en Firebase:', error);
       this.mensajeDisponibilidad = 'Error al enviar la notificación.';
     }
   }
 
-    async Enviar(){
-      const asunto= 'Tu medicamento ya está disponible'
-      const cuerpo = `Message: ${asunto} ${this.nmedicamento} ${this.cantidad} ${this.entidad} ${this.direccionSeleccionada}`
-      const correodata = {
-      to: this.userEmail,
-      subject: asunto,
-      message: cuerpo
-
-      };
-      this.http.post<any>('https://us-central1-proyecto-final-8e4e0.cloudfunctions.net/mailer',correodata)
-      .subscribe(
-        response=>{
-          console.log('correo enviado',response);
-        },
-        error=>{
-          console.log('error al enviar correo',error);
-        },
-        
-
-      );
-
-
+  volverAMedicamentos() {
+    this.router.navigate(['/medicamentos']);
   }
-
   
 }

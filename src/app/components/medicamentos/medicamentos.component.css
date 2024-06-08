@@ -1,51 +1,65 @@
-
 mat-toolbar {
-    background: #004a9f;
-    color: white;
-  }
-  
-  
-  mat-sidenav {
-    margin: 16px;
-    width: 200px;
-    border-right: none;
-    background: #002b5c;
-    color: white;
-    border-radius: 10px;
-    padding: 16px;
-    text-align: center;
-  }
-  
+  background: #004a9f;
+  color: white;
+}
+
+mat-sidenav {
+  margin: 16px;
+  width: 200px;
+  border-right: none;
+  background: #002b5c;
+  color: white;
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+}
+
+.content {
+  height: calc(100vh - 100px);
+  border-radius: 10px;
+  margin: 16px;
+  margin-left: 32px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 2rem;
+  color: rgb(62, 87, 227);
+}
+
+.autocomplete-options {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.autocomplete-option {
+  padding: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.autocomplete-option:hover {
+  background-color: #f0f0f0;
+}
+
+/* Media queries para pantallas más pequeñas */
+@media (max-width: 768px) {
   .content {
-    height: calc(100vh - 100px);
-    border-radius: 10px;
-    margin: 16px;
-    margin-left: 32px;
-  
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  
-    font-size: 2rem;
-    color: rgb(62, 87, 227);
+      margin: 8px;
+      font-size: 1.5rem;
   }
 
-  .autocomplete-options {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
+
+  .max-w-md {
+      padding: 8px;
+      width: 100%; /* Asegurar que el contenedor no se salga del borde */
+      box-sizing: border-box; /* Incluir padding y borde dentro del ancho total */
   }
-  
-  .autocomplete-option {
-    padding: 8px;
-    cursor: pointer;
-    font-size: 14px; 
+
+  button {
+      width: 100%;
+      margin-top: 8px;
   }
-  
-  .autocomplete-option:hover {
-    background-color: #f0f0f0;
-  }
-  
-  
-  
-  
+}

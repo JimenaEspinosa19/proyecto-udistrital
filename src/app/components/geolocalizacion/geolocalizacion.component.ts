@@ -16,6 +16,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./geolocalizacion.component.css']
 })
 export class GeolocalizacionComponent {
+  directionsRenderer: google.maps.DirectionsRenderer | undefined;
 
   
   @ViewChild('divMap') divMap!: ElementRef;
@@ -69,9 +70,14 @@ export class GeolocalizacionComponent {
 
 
   mapRuta(): void {
+    this.limpiarMapa();
+
     const directionService = new google.maps.DirectionsService();
     const directionRender = new google.maps.DirectionsRenderer();
     directionRender.setMap(this.mapa);
+
+    // Almacenar una referencia al DirectionsRenderer creado
+    this.directionsRenderer = directionRender;
   
     directionService.route({
       origin: new google.maps.LatLng(this.posicionActual.coords.latitude, this.posicionActual.coords.longitude),
@@ -87,7 +93,20 @@ export class GeolocalizacionComponent {
         console.error('No se pudo calcular la ruta:', estado);
       }
     });
-  }
+}
+
+limpiarMapa(): void {
+    // Limpiar marcadores anteriores
+    this.markers.forEach(marker => {
+      marker.setMap(null);
+    });
+    this.markers = [];
+
+    // Limpiar la ruta anterior si existe la referencia
+    if (this.directionsRenderer) {
+      this.directionsRenderer.setMap(null);
+    }
+}
   
   seleccionarModo(modo: string) {
     this.modoTransporte = modo;
@@ -137,7 +156,7 @@ export class GeolocalizacionComponent {
 
   volver(){
 
-    this.router.navigate(['/otrospuntos']);
+    this.router.navigate(['/medicamentos']);
   }
   
 

@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { collection, query, where, getDocs, Firestore, addDoc, deleteDoc, doc, setDoc, updateDoc} from '@angular/fire/firestore';
 import { Observable } from 'rxjs/internal/Observable';
+import { AuthService } from 'src/app/shared/services/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
-  [x: string]: any;
   nmedicamento: string;
   cantidad: string;
   identificacion: number;
@@ -100,7 +100,8 @@ export class DataService {
     entidad: string,
     direccionSeleccionada: string,
     fechaReserva: string,
-    horaReserva: string
+    horaReserva: string,
+    idClente: string
   ) {
     try {
       await addDoc(collection(this.firestore, 'reservas'), {
@@ -111,7 +112,8 @@ export class DataService {
         entidad,
         direccionSeleccionada,
         fechaReserva,
-        horaReserva
+        horaReserva,
+        idClente
       });
       console.log("Reserva de medicamento creada con éxito en Firestore.");
     } catch (error) {
@@ -171,45 +173,42 @@ export class DataService {
   
   async getDireccionesPorEntidadYCiudad(entidad: string, ciudad: string): Promise<string[]> {
     try {
-        console.log('Consultando direcciones por entidad y ciudad...');
-        const querySnapshot = await getDocs(
-            query(
-                collection(this.firestore, 'Farmacias'), 
-                where('Nombre', '==', entidad),
-                where('Ciudad', '==', ciudad)
-            )
-        );
-
-        const direccionesSet = new Set<string>(); 
-        querySnapshot.forEach(doc => {
-            const data = doc.data();
-            console.log('Datos del documento:', data);
-            if (data['Direccion']) {
-                direccionesSet.add(data['Direccion']); 
-            }
-        });
-
-        const direcciones: string[] = Array.from(direccionesSet); 
-
-        console.log('Direcciones encontradas:', direcciones);
-        return direcciones;
-    } catch (error) {
-        console.error('Error al obtener direcciones por entidad y ciudad:', error);
-        throw error;
-    }
-}
+      const direcciones: any[] | PromiseLike<string[]> = [];
   
-  async getCiudades(): Promise<string[]> {
-    const querySnapshot = await getDocs(collection(this.firestore, 'Farmacias'));
-    const ciudades = new Set<string>();
-    querySnapshot.forEach(doc => {
-      const data = doc.data();
-      if (data['Ciudad']) { 
-        ciudades.add(data['Ciudad']);
-      }
-    });
-    return Array.from(ciudades);
+      const querySnapshot = await getDocs(query(collection(this.firestore, 'Farmacias'), where('Nombre', '==', entidad), where('Ciudad', '==', ciudad)));
+  
+      querySnapshot.forEach(doc => {
+        const data = doc.data();
+        if (data['Direccion']) { 
+          direcciones.push(data['Direccion']);
+        }
+      });
+  
+      console.log('Direcciones encontradas:', direcciones);
+  
+      return direcciones;
+    } catch (error) {
+      console.error('Error al obtener direcciones:', error);
+      return [];
+    }
+  }
+  
 
+  async getCiudades(): Promise<string[]> {
+    try {
+      const querySnapshot = await getDocs(collection(this.firestore, 'Farmacias'));
+      const ciudades = new Set<string>();
+      querySnapshot.forEach(doc => {
+        const data = doc.data();
+        if (data['Ciudad']) { 
+          ciudades.add(data['Ciudad']);
+        }
+      });
+      return Array.from(ciudades);
+    } catch (error) {
+      console.error('Error al obtener ciudades:', error);
+      return []; // o maneja el error de alguna otra manera según tu aplicación
+    }
   }
 
   
@@ -308,10 +307,6 @@ async getPacientes() {
     return snapshot.docs.map(doc => doc.data());
   }
   
-  async getReservas(): Promise<any[]> {
-    const snapshot = await getDocs(collection(this.firestore, 'reservas'));
-    return snapshot.docs.map(doc => doc.data());
-  }
   
   async eliminarReserva(reservaData: any): Promise<void> {
     console.log(reservaData);
@@ -469,6 +464,32 @@ async getPacientes() {
     const snapshot = await getDocs(query(collection(this.firestore, 'Notificaciones')));
     return snapshot.docs.map(doc => doc.data());
   }
+  async getTodasLasReservas(userID: string): Promise<any[]> {
+    console.log('ID del usuario actual:', userID);
+    const snapshot = await getDocs(query(collection(this.firestore, 'reservas')));
+    return snapshot.docs.map(doc => doc.data());
+  }
 
-  
-}  
+  async getReservas(userID: string): Promise<any[]> {
+    console.log('ID del usuario actual:', userID);
+    const snapshot = await getDocs(query(collection(this.firestore, 'reservas'), where('idClente', '==', userID)));
+    return snapshot.docs.map(doc => doc.data());
+  }
+
+
+  async obtenerReservaExistente(fechaReserva: string, horaReserva: string): Promise<boolean> {
+    try {
+      console.log('Obteniendo reservas para la fecha y hora especificadas...');
+      const snapshot = await getDocs(query(collection(this.firestore, 'reservas'), 
+        where('fechaReserva', '==', fechaReserva),
+        where('horaReserva', '==', horaReserva)
+      ));
+      
+      return !snapshot.empty; // Retorna verdadero si se encontró al menos una reserva existente
+    } catch (error) {
+      console.error('Error al obtener la reserva existente:', error);
+      throw error; // Lanza el error para que sea manejado por el componente
+    }
+  }
+
+}

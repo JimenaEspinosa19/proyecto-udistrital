@@ -1,100 +1,139 @@
 mat-toolbar {
-    background: #004a9f;
-    color: white;
+  background: #004a9f;
+  color: white;
+}
+
+mat-sidenav {
+  margin: 16px;
+  width: 200px;
+  border-right: none;
+  background: #002b5c;
+  color: white;
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+}
+
+.content {
+  height: calc(100vh - 98px);
+  border-radius: 10px;
+  margin: 16px;
+  margin-left: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  font-size: 2rem;
+  color: lightgray;
+}
+
+mat-sidenav-container {
+  height: calc(100vh - 65px);
+}
+
+.menu-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 1rem;
+
+  mat-icon {
+    margin-right: 8px;
   }
-  
-  mat-sidenav {
-    margin: 16px;
-    width: 200px;
-    border-right: none;
-    background: #002b5c;
-    color: white;
-    border-radius: 10px;
-    padding: 16px;
-    text-align: center;
-  }
-  
+}
+
+.avatar {
+  margin-top: 16px;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+
+.name {
+  margin-top: 8px;
+  font-weight: normal;
+}
+
+.designation {
+  margin-top: 2px;
+  font-size: 0.7rem;
+  color: lightgrey;
+}
+
+mat-divider {
+  margin-top: 16px;
+  margin-bottom: 16px;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+mat-toolbar {
+  display: flex;
+  justify-content: space-between;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-brand {
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+  margin-right: 20px;
+}
+
+.navbar-nav {
+  display: flex;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-item {
+  margin-right: 10px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
   .content {
-    height: calc(100vh - 98px);
-    border-radius: 10px;
-    margin: 16px;
-    margin-left: 32px;
-  
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  
-    font-size: 2rem;
-    color: lightgray;
+    margin: 8px;
+    margin-left: 16px;
+    font-size: 1.5rem;
   }
-  
-  mat-sidenav-container {
-    height: calc(100vh - 65px);
-  }
-  
-  
-  .menu-button {
+
+  .max-w-md {
     width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    font-size: 1rem;
-  
-    mat-icon {
-      margin-right: 8px;
-    }
+    padding: 8px;
   }
-  
-  .avatar {
-    margin-top: 16px;
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
+
+  .mb-4 {
+    margin-bottom: 8px;
   }
-  
-  .name {
-    margin-top: 8px;
-    font-weight: normal;
+
+  .mr-2, .ml-2 {
+    margin: 0;
   }
-  
-  .designation {
-    margin-top: 2px;
-    font-size: 0.7rem;
-    color: lightgrey;
+
+  .flex {
+    flex-direction: column;
   }
-  
-  mat-divider {
-    margin-top: 16px;
-    margin-bottom: 16px;
-    background-color: rgba(255, 255, 255, 0.5);
+
+  .justify-center {
+    justify-content: center;
   }
-  
-  mat-toolbar {
-          display: flex;
-          justify-content: space-between;
-        }
-  
-        .container {
-          display: flex;
-          align-items: center;
-        }
-  
-        .navbar-brand {
-          font-weight: bold;
-          color: white;
-          text-decoration: none;
-          margin-right: 20px;
-        }
-  
-        .navbar-nav {
-          display: flex;
-          list-style-type: none;
-          margin: 0;
-          padding: 0;
-        }
-  
-        .nav-item {
-          margin-right: 10px;
-        }
-  
-      
+
+  .text-sm {
+    font-size: 0.875rem;
+  }
+}
+
+/* Prevent content overflow */
+.form-container {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+input, button {
+  width: 100%;
+}

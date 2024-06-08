@@ -1,40 +1,89 @@
-<div class="content mat-elevation-z8" style="color: rgb(4, 4, 4); background-color: #f3ecec;">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            color: #000;
+        }
+
+        .banner {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
 
 
-  <div class="info-container">
-    <div class="info-box">
-      <section id="quienes_somos">
-        <h2>¿Quiénes somos?</h2>
-        <p>Somos una plataforma dedicada a proporcionar un acceso rápido y seguro a medicamentos y servicios de salud.</p>
-      </section>
+        .content-container {
+            padding: 20px;
+            background-color: #f3ecec;
+            height: calc(100vh - 100px);
+            border-radius: 10px;
+            margin: 16px;
+            margin-left: 32px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-box {
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            padding: 20px;
+        }
+
+        .info-box h2 {
+            color: #007bff;
+        }
+
+        .info-box p {
+            text-align: justify;
+            margin-top: 10px;
+        }
+
+        .info-box ul {
+            padding-left: 20px;
+            margin-top: 10px;
+        }
+
+        @media only screen and (max-width: 600px) {
+            .info-box {
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="content-container mat-elevation-z8" style="color: rgb(4, 4, 4); background-color: #f6eeee;">
+        <div class="info-box">
+            <h2>¿Quiénes somos?</h2>
+            <p>Somos una plataforma dedicada a proporcionar un acceso rápido y seguro a medicamentos y servicios de salud.</p>
+        </div>
+
+        <div class="info-box">
+            <h2>Nuestros Servicios</h2>
+            <p><strong>Dispensación de Medicamentos:</strong> Te ofrecemos consultar disponibilidad de tus medicamentos en puntos de entrega específicos.</p>
+            <p><strong>Puntos de Entrega:</strong> Ofrecemos múltiples puntos de entrega estratégicamente ubicados para que puedas recoger tus medicamentos de manera conveniente.</p>
+            <p><strong>Reserva tu medicamento:</strong> En nuestra plataforma podrás identificar tu tiempo estimado desde tu ubicación y tu punto de entrega seleccionado.</p>
+        </div>
+
+        <div class="info-box">
+            <h2>¿Por qué elegirnos?</h2>
+            <p><strong>Conveniencia:</strong> Con múltiples puntos de entrega y un proceso de pedido fácil, hacemos que obtener tus medicamentos sea rápido y sin complicaciones.</p>
+            <p><strong>Seguridad:</strong> Cumplimos con los más altos estándares de seguridad y calidad en la dispensación de medicamentos.</p>
+        </div>
+
+        <div class="info-box">
+            <h2>Nuestro Compromiso con la Comunidad</h2>
+            <p>Creemos en devolver a la comunidad y apoyar iniciativas de salud locales. Estamos comprometidos con la salud y el bienestar de nuestros clientes y de la comunidad en general.</p>
+        </div>
     </div>
-
-    <div class="info-box">
-      <section id="nuestros_servicios">
-        <h2>Nuestros Servicios</h2>
-        <ul>
-          <li><strong>Dispensación de Medicamentos:</strong> Te ofrecemos consultar disponibilidad de tus medicamentos en puntos de entrega especificos</li>
-          <li><strong>Puntos de Entrega:</strong> Ofrecemos múltiples puntos de entrega estratégicamente ubicados para que puedas recoger tus medicamentos de manera conveniente.</li>
-          <li><strong>Reserva tu medicamento:</strong> En nuestra plataforma podrás identificar tu tiempo estimado desde tu ubicación y tu punto de entrega seleccionado.</li>
-        </ul>
-      </section>
-    </div>
-
-    <div class="info-box">
-      <section id="por_que_elegirnos">
-        <h2>¿Por qué elegirnos?</h2>
-        <ul>
-          <li><strong>Conveniencia:</strong> Con múltiples puntos de entrega y un proceso de pedido fácil, hacemos que obtener tus medicamentos sea rápido y sin complicaciones.</li>
-          <li><strong>Seguridad:</strong> Cumplimos con los más altos estándares de seguridad y calidad en la dispensación de medicamentos.</li>
-        </ul>
-      </section>
-    </div>
-
-    <div class="info-box">
-      <section id="nuestro_compromiso">
-        <h2>Nuestro Compromiso con la Comunidad</h2>
-        <p>Creemos en devolver a la comunidad y apoyar iniciativas de salud locales. Estamos comprometidos con la salud y el bienestar de nuestros clientes y de la comunidad en general.</p>
-      </section>
-    </div>
-  </div>
-</div>
+  
+</body>
+</html>

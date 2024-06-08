@@ -42,7 +42,7 @@ mat-sidenav-container {
   font-size: 1rem;
 
   mat-icon {
-    margin-right: 8px;
+    margin-right: 6px;
   }
 }
 
@@ -54,7 +54,7 @@ mat-sidenav-container {
 }
 
 .name {
-  margin-top: 8px;
+  margin-top: 6px;
   font-weight: normal;
 }
 

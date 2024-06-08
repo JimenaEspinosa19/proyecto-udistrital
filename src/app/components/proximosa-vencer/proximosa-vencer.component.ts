@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { DataService } from 'src/app/shared/services/data.service';
+import { AuthService } from 'src/app/shared/services/auth.service';
 
 @Component({
   selector: 'app-proximosa-vencer',
@@ -21,12 +22,18 @@ export class ProximosaVencerComponent implements OnInit {
   opcionesMedicamentos: any[] = []; 
   nmedicamento: any;
   telefono: string='';
+  userEmail: string | null = '';
 
 
-  constructor(private dataService: DataService, private router: Router) { }
+  constructor(private dataService: DataService, private router: Router, private authService: AuthService) { }
 
 
   async ngOnInit() {
+       
+    
+    this.authService.getUserEmail().subscribe(email => {
+      this.userEmail = email;
+    });
 
       this.medicamentosFiltrados = this.medicamentoControl.valueChanges.pipe(
         startWith(''),

@@ -109,13 +109,24 @@ export class AuthService {
     return user !== null;
   }
   
-  getCurrentUserID(): string | null {
-    if (this.userData) {
-      return this.userData.uid;
-    } else {
-      return null;
-    }
+
+  getCurrentUserID(): Promise<string | null> {
+    return new Promise<string | null>((resolve, reject) => {
+      this.firebaseAuthenticationService.authState.subscribe((user) => {
+        if (user && user.uid) {
+          resolve(user.uid);
+        } else {
+          console.log('ID de usuario actual es nulo');
+          resolve(null);
+        }
+      }, error => {
+        console.error('Error al obtener el ID del usuario:', error);
+        reject(error);
+      });
+    });
   }
+  
+  
   // logOut
   logOut() {
     return this.firebaseAuthenticationService.signOut().then(() => {
@@ -128,5 +139,15 @@ export class AuthService {
     return this.afAuth.authState.pipe(map(user => user ? user.email : null));
   }
   
-
+  resetPassword(email: string) {
+    return this.firebaseAuthenticationService.sendPasswordResetEmail(email)
+      .then(() => {
+        console.log('Correo de restablecimiento de contraseña enviado correctamente');
+        alert('Hemos enviado un correo electrónico para restablecer tu contraseña');
+      })
+      .catch((error: any) => {
+        console.error('Error al enviar el correo de restablecimiento de contraseña:', error);
+        alert(error.message);
+      });
+  }
 }

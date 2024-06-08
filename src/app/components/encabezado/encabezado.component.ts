@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./encabezado.component.css']
 })
 export class EncabezadoComponent {
+sidenav: any;
 
   constructor(private authService: AuthService, private router: Router) {}
 

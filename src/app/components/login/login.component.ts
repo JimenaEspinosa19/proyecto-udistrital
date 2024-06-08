@@ -63,4 +63,8 @@ export class LoginComponent {
     return Math.floor(100000 + Math.random() * 900000).toString();
   }
 
+  resetPassword(email: string) {
+    this.authService.resetPassword(email);
+  }
+
 }

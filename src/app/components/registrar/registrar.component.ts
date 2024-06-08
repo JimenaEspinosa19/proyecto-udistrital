@@ -31,6 +31,17 @@ export class RegistrarComponent {
   entidadesDirecciones: { [entidad: string]: string[] } = {};
   userEmail: string | null = '';
   
+  medicamentoDisponible: boolean = false;
+  mensajeDisponibilidad: string = '';
+  mensajeError: string = '';
+  direccionSeleccionadaSeleccionada: boolean = false;
+  eps: string = '';
+  epsSeleccionada: string[] = [];
+  direccionesFiltradas: string[] = [];
+  mostrarBotonesNotificacionYPuntos: boolean = false;
+
+  
+  
 
   constructor(
     private authService: AuthService,
@@ -39,115 +50,250 @@ export class RegistrarComponent {
     private http: HttpClient
   ) {}
 
-  ngOnInit() {
-    this.readMedicamentos(); 
-    this.actualizarCiudades();
+  async ngOnInit() {
     
+    this.authService.getUserEmail().subscribe(email => {
+      this.userEmail = email;
+    });
+    await this.loadCiudades();
+    if (this.ciudades.length > 0) {
+      const primeraCiudad = this.ciudades[0];
+      await this.actualizarEntidadesYDirecciones(primeraCiudad);
+    }
     this.medicamentosFiltrados = this.medicamentoControl.valueChanges.pipe(
       startWith(''),
       map(value => this.filterMedicamentos(value))
     );
+    this.opcionesMedicamentos = await this.dataService.getMedicamentos(); 
   }
-
-
-  async readMedicamentos() {
-    this.medicamentos = await this.dataService.getMedicamentos();
-    this.opcionesMedicamentos = this.medicamentos; 
-    console.log('Datos de medicamentos:', this.medicamentos);
+  
+  async actualizarEntidadesYDirecciones(ciudad: string) {
+    this.ciudad = ciudad;
+    this.epsSeleccionada = await this.dataService.getEPSByCiudad(ciudad);
+    if (this.epsSeleccionada.length > 0) {
+      await this.onChangeEPS(this.epsSeleccionada[0]);
+    }
+    if (this.entidades.length > 0) {
+      this.entidad = this.entidades[0]; 
+      await this.updateDireccionesFiltradas(); 
+      if (this.direccionesFiltradas.length > 0) {
+        this.direccionSeleccionada = this.direccionesFiltradas[0]; 
+      }
+    }
+  }
+  
+  async loadCiudades() {
+    this.ciudades = await this.dataService.getCiudades();
   }
 
   private filterMedicamentos(value: string): any[] {
     const filterValue = value.toLowerCase();
-    if (!filterValue) {      
-      return [];
+    if (!filterValue || !this.opcionesMedicamentos) {      
+        return [];
     }
-    return this.opcionesMedicamentos.filter(option => option.Nombre.toLowerCase().includes(filterValue));
+  
+    const MAX_MEDICAMENTOS = 3; 
+    const medicamentosFiltrados = this.opcionesMedicamentos.filter(option => option.Nombre.toLowerCase().includes(filterValue));
+    return medicamentosFiltrados.slice(0, MAX_MEDICAMENTOS); // Devuelve solo los primeros MAX_MEDICAMENTOS elementos
+}
+
+
+  selectMedicamento(medicamento: any) {
+    this.Nombre = medicamento.Nombre; 
+    this.medicamentoControl.setValue(medicamento.Nombre); 
   }
 
-  async addMedicament(Nombre: string, cantidad: string, entidad: string) {
-    console.log('Nombre:', Nombre);
-    console.log('Cantidad:', cantidad);
-    console.log('Dirección seleccionada:', this.direccionSeleccionada);
-    console.log('Entidad:', entidad);
-    console.log('Ciudad seleccionada:', this.ciudad);
+  async buscarMedicamento() { 
+    if (!this.nmedicamento || !this.entidad || !this.direccionSeleccionada || !this.ciudad || !this.cantidad) {
+      this.mensajeError = 'Todos los campos deben estar llenos.';
+      console.log('Todos los campos deben estar llenos.');
+      return; 
+    }
 
-    if (!Nombre || !cantidad || !this.direccionSeleccionada || !entidad || !this.ciudad) {
-        this.mensaje = "Por favor, complete todos los campos.";
-        return;
+    const cantidadNumerica = parseInt(this.cantidad);
+    console.log('CANTIDAD FINAL', cantidadNumerica)
+
+    if (isNaN(cantidadNumerica) || cantidadNumerica <= 0) {
+      this.mensajeError = 'La cantidad del medicamento no es valida,';
+      console.log('La cantidad ingresada no es válida.');
+      return; 
     }
 
     const direccion = this.direccionSeleccionada;
     const medicamentos = await this.dataService.getMedicamentosTodos();
 
-  
     const medicamentoExistente = medicamentos.find(medicamento =>
-      medicamento['nmedicamento'] === Nombre &&
+      medicamento['nmedicamento'] === this.nmedicamento &&
       medicamento['direcciones'].includes(this.direccionSeleccionada) && 
-      medicamento['entidad'] === entidad &&
+      medicamento['entidad'] === this.entidad &&
       medicamento['ciudad'] === this.ciudad
     );
 
     if (medicamentoExistente) {
-        medicamentoExistente['cantidad'] = parseInt(medicamentoExistente['cantidad']) + parseInt(cantidad);
-        await this.dataService.updateMedicament(medicamentoExistente); 
-        this.mensaje = `Se agregaron ${cantidad} medicamentos al existente. Total: ${medicamentoExistente['cantidad']}`;
+      if (medicamentoExistente['cantidad'] >= cantidadNumerica) {
+        this.dataService.setDatosCliente(this.nmedicamento, this.entidad, this.direccionSeleccionada, this.cantidad, this.ciudad);
+  
+        this.medicamentoDisponible = true;
+        this.mensajeDisponibilidad = 'El medicamento está disponible en esta dirección y ciudad.';
+      } else {
+        this.dataService.setDatosCliente(this.nmedicamento, this.entidad, this.direccionSeleccionada, this.cantidad,this.ciudad);
+        this.medicamentoDisponible = false;
+        this.mensajeDisponibilidad = 'El medicamento requerido no está disponible. ¿Qué acción desea realizar?';
+        this.mostrarBotonesNotificacionYPuntos = true; 
+
+      }
     } else {
-        await this.dataService.createmedicament(Nombre, cantidad, [this.direccionSeleccionada], entidad, this.ciudad);
-
-       
-        try {
-            const notificaciones = await this.dataService.getNotificaciones();
-            const notificacionExistente = notificaciones.find(notificacion =>
-                notificacion['nombre'] === Nombre &&
-                notificacion['direccion'] === this.direccionSeleccionada &&
-                notificacion['entidad'] === entidad &&
-                notificacion['ciudad'] === this.ciudad &&
-                parseInt(notificacion['cantidad']) > 1
-            );
-
-            if (notificacionExistente) {
-                // Si hay coincidencias y la cantidad ingresada es mayor a 1, enviar el correo de notificación
-                const asunto = '¡Tu medicamento ya está disponible en DispenAPP!';
-                const cuerpo = `El medicamento ${Nombre} ya está disponible en la entidad ${entidad} y la dirección ${this.direccionSeleccionada}. Cantidad disponible: ${notificacionExistente['cantidad']} Reserva en DispenAPP`;
-                const correodata = {
-                    to: this.userEmail,
-                    subject: asunto,
-                    message: cuerpo
-                };
-                this.http.post<any>('https://us-central1-proyecto-final-8e4e0.cloudfunctions.net/mailer', correodata)
-                    .subscribe(
-                        response => {
-                            console.log('Correo de notificación enviado', response);
-                        },
-                        error => {
-                            console.log('Error al enviar correo de notificación', error);
-                        }
-                    );
-            } else {
-                this.mensaje = "No hay notificaciones para reportar.";
-            }
-        } catch (error) {
-            console.log('Error al obtener las notificaciones', error);
-        }
-
-        this.mensaje = "Medicamento ingresado correctamente.";
-    }
-}
-
-    
-  async actualizarDireccionesPorEntidad(entidad: string) {
-    const direcciones = await this.dataService.getDireccionesPorEntidad(entidad);
-    if (direcciones && direcciones.length > 0) {
-      this.direcciones = Array.from(new Set(direcciones));
-    } else {
-      this.direcciones = [];
+      this.dataService.setDatosCliente(this.nmedicamento, this.entidad, this.direccionSeleccionada, this.cantidad,this.ciudad);
+      this.medicamentoDisponible = false;
+      this.mensajeDisponibilidad = 'El medicamento no está disponible en esta dirección y ciudad. ¿Qué acción desea realizar?';
+      this.mostrarBotonesNotificacionYPuntos = true; 
     }
   }
 
-  selectMedicamento(medicamento: any) {
-    this.Nombre = medicamento.Nombre; 
-    this.medicamentoControl.setValue(medicamento.Nombre); 
+
+  async reservarMedicamento() {
+    this.router.navigate(['/reservas']);
+  }
+
+  async onChangeCiudad(event: any) {
+    const target = event.target as HTMLSelectElement;
+    this.ciudad = target.value;
+    console.log("Ciudad seleccionada:", this.ciudad); 
+    if (this.ciudad) {
+      this.epsSeleccionada = await this.dataService.getEPSByCiudad(this.ciudad);
+      await this.onChangeEPS(this.epsSeleccionada[0]); 
+      await this.updateDireccionesFiltradas(); // Actualizar las direcciones filtradas
+    }
+  }
+  
+  
+  async onChangeEPS(eps: string) {
+    const ciudadSeleccionada = this.ciudad;
+    this.entidades = await this.dataService.getEntidadesPorCiudadYEPS(ciudadSeleccionada, eps);
+    if (this.entidades.length > 0) {
+      this.entidad = this.entidades[0]; 
+      await this.updateDireccionesFiltradas();
+    }
+  }
+  
+  
+
+  async updateDireccionesFiltradas() {
+  if (this.entidad && this.ciudad) { 
+    this.direccionesFiltradas = await this.dataService.getDireccionesPorEntidadYCiudad(this.entidad, this.ciudad);
+  }
 }
+
+
+  onChangeEntidad(entidad: string) {
+    this.entidad = entidad;
+    this.updateDireccionesFiltradas(); 
+  }
+
+  //
+     async verUbicacion() {
+    const ubicacion = this.direccionSeleccionada;
+    console.log('ubicacion seleccionada',ubicacion)
+    return (ubicacion)
+    
+    }
+
+  //
+  solicitarNotificacion() {
+    this.router.navigate(['/notificaciones']);
+    
+}
+verOtrosPuntosCercanos() {
+  
+      this.router.navigate(['/otrospuntos']);
+    
+}
+
+enviarDireccionALocalizacion() {
+
+  if (this.direccionSeleccionada) {
+   
+    this.router.navigate(['/localizacion'], { state: { direccionSeleccionada: this.direccionSeleccionada } });
+  } else {
+    
+    console.log("No se ha seleccionado ninguna dirección.");
+  }
+}
+
+
+async addMedicament(Nombre: string, cantidad: string, entidad: string) {
+  console.log('Nombre:', Nombre);
+  console.log('Cantidad:', cantidad);
+  console.log('Dirección seleccionada:', this.direccionSeleccionada);
+  console.log('Entidad:', entidad);
+  console.log('Ciudad seleccionada:', this.ciudad);
+
+  if (!Nombre || !cantidad || !this.direccionSeleccionada || !entidad || !this.ciudad) {
+      this.mensaje = "Por favor, complete todos los campos.";
+      return;
+  }
+
+  const direccion = this.direccionSeleccionada;
+  const medicamentos = await this.dataService.getMedicamentosTodos();
+
+  let medicamentoExistente = medicamentos.find(medicamento =>
+      medicamento['nmedicamento'] === Nombre &&
+      medicamento['direcciones'].includes(this.direccionSeleccionada) &&
+      medicamento['entidad'] === entidad &&
+      medicamento['ciudad'] === this.ciudad
+  );
+
+  if (medicamentoExistente) {
+      medicamentoExistente['cantidad'] = parseInt(medicamentoExistente['cantidad']) + parseInt(cantidad);
+      await this.dataService.updateMedicament(medicamentoExistente);
+      this.mensaje = `Se agregaron ${cantidad} medicamentos al existente. Total: ${medicamentoExistente['cantidad']}`;
+  } else {
+      await this.dataService.createmedicament(Nombre, cantidad, [this.direccionSeleccionada], entidad, this.ciudad);
+      this.mensaje = "Medicamento ingresado correctamente.";
+  }
+
+  try {
+      const notificaciones = await this.dataService.getNotificaciones();
+      console.log('Notificaciones:', notificaciones);
+
+      const notificacionExistente = notificaciones.find(notificacion =>
+          notificacion['nmedicamento'] === Nombre &&
+          notificacion['direccionSeleccionada'] === this.direccionSeleccionada &&
+          notificacion['entidad'] === entidad &&
+          notificacion['ciudad'] === this.ciudad &&
+          parseInt(cantidad) >= parseInt(notificacion['cantidad'])
+      );
+
+      if (notificacionExistente) {
+          const asunto = 'Tu medicamento ya está disponible en dispenAPP';
+          const cuerpo = `Tu medicamento ${Nombre} ya está disponible en ${entidad}, dirección ${this.direccionSeleccionada}. Reserva en DispenAPP antes de que se agote nuevamente.`;
+          const correodata = {
+              to: this.userEmail,
+              subject: asunto,
+              message: cuerpo
+          };
+
+          this.http.post<any>('https://us-central1-proyecto-final-8e4e0.cloudfunctions.net/mailer', correodata)
+              .subscribe(
+                  response => {
+                      console.log('Correo enviado', response);
+                      this.mensaje = "Medicamento ingresado correctamente.";
+                  },
+                  error => {
+                      console.log('Error al enviar correo', error);
+                      this.mensaje = "Error al enviar el correo de notificación.";
+                  }
+              );
+      } else {
+          console.log("No hay notificaciones para reportar.");
+      }
+  } catch (error) {
+      console.log('Error al obtener las notificaciones', error);
+      this.mensaje = "Error al obtener las notificaciones.";
+  }
+}
+
+    
 
 async actualizarDireccionesPorEntidadYCiudad(entidad: string, ciudad: string) {
   const direcciones = await this.dataService.getDireccionesPorEntidadYCiudad(entidad, ciudad);
@@ -162,14 +308,7 @@ async actualizarCiudades() {
   this.ciudades = await this.dataService.getCiudades();
 }
 
-async onChangeCiudad(event: any) {
-  this.ciudad = event?.target?.value;
-  if (this.ciudad) {
-    this.entidades = await this.dataService.getEntidadesPorCiudad(this.ciudad);
-    this.entidad = this.entidades[0]; 
-    await this.actualizarDireccionesPorEntidadYCiudad(this.entidad, this.ciudad); 
-  }
-}
+
 
 
 }

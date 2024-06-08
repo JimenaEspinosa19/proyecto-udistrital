@@ -1,116 +1,170 @@
 mat-toolbar {
-    background: #0d67cf;
-    color: white;
-  }
-  
+  background: #0d67cf;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+}
+
+mat-sidenav {
+  margin: 16px;
+  width: 200px;
+  border-right: none;
+  background: #053c7a;
+  color: white;
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+}
+
+.content {
+  height: calc(100vh - 98px);
+  border-radius: 10px;
+  margin: 16px;
+  margin-left: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  font-size: 2rem;
+  color: lightgray;
+  overflow: auto; /* Añadido para scroll en contenido */
+}
+
+mat-sidenav-container {
+  height: calc(100vh - 65px);
+  background-color: #ffffff;
+}
+
+.menu-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 1rem;
+}
+
+mat-icon {
+  margin-right: 8px;
+}
+
+.avatar {
+  margin-top: 16px;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+
+.name {
+  margin-top: 8px;
+  font-weight: normal;
+  overflow-wrap: break-word; /* Añadido para evitar que el texto se salga del borde */
+  word-break: break-word; /* Añadido para evitar que el texto se salga del borde */
+}
+
+.designation {
+  margin-top: 2px;
+  font-size: 0.7rem;
+  color: lightgrey;
+}
+
+mat-divider {
+  margin-top: 16px;
+  margin-bottom: 16px;
+  background-color: rgba(90, 51, 221, 0.5);
+}
+
+.container {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-brand {
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+  margin-right: 20px;
+}
+
+.navbar-nav {
+  display: flex;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-item {
+  margin-right: 10px;
+}
+
+.avatar-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 20%;
+}
+
+.example-card {
+  max-width: 400px;
+  margin-bottom: 8px;
+}
+
+.inicio-card {
+  background-color: #053c7a;
+  color: white;
+}
+
+table {
+  table-layout: fixed; /* Añadido para que las celdas no se expandan más allá del ancho de la tabla */
+  width: 100%; /* Asegura que la tabla ocupe el ancho completo del contenedor */
+}
+
+th, td {
+  overflow-wrap: break-word; /* Añadido para evitar que el texto se salga del borde */
+  word-break: break-word; /* Añadido para evitar que el texto se salga del borde */
+  white-space: normal; /* Asegura que el texto pueda romperse en varias líneas */
+}
+
+/* Responsive adjustments */
+@media (max-width: 1000px) {
   mat-sidenav {
-    margin: 16px;
-    width: 200px;
-    border-right: none;
-    background: #053c7a;
-    color: white;
-    border-radius: 10px;
-    padding: 16px;
-    text-align: center;
+      width: 100%;
   }
-  
+
   .content {
-    height: calc(100vh - 98px);
-    border-radius: 10px;
-    margin: 16px;
-    margin-left: 32px;
-  
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  
-    font-size: 2rem;
-    color: lightgray;
+      margin-left: 0;
   }
-  
-  mat-sidenav-container {
-    height: calc(100vh - 65px);
-    background-color: #ffffff
+
+  table {
+      width: 100%;
   }
-  
-  
-  .menu-button {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    font-size: 1rem;
-  
-    mat-icon {
-      margin-right: 8px;
-    }
+
+  thead {
+      display: none;
   }
-  
-  .avatar {
-    margin-top: 16px;
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
+
+  tbody, tr, td {
+      display: block;
+      width: 100%;
   }
-  
-  .name {
-    margin-top: 8px;
-    font-weight: normal;
+
+  tr {
+      margin-bottom: 15px;
   }
-  
-  .designation {
-    margin-top: 2px;
-    font-size: 0.7rem;
-    color: lightgrey;
+
+  td {
+      text-align: right;
+      padding-left: 50%;
+      position: relative;
+      overflow-wrap: break-word; 
+      word-break: break-word; 
   }
-  
-  mat-divider {
-    margin-top: 16px;
-    margin-bottom: 16px;
-    background-color: rgba(90, 51, 221, 0.5);
+
+  td::before {
+      content: attr(data-label);
+      position: absolute;
+      left: 0;
+      width: 50%;
+      padding-left: 10px;
+      font-weight: bold;
+      text-align: left;
   }
-  
-  mat-toolbar {
-          display: flex;
-          justify-content: space-between;
-        }
-  
-        .container {
-          display: flex;
-          align-items: center;
-        }
-  
-        .navbar-brand {
-          font-weight: bold;
-          color: white;
-          text-decoration: none;
-          margin-right: 20px;
-        }
-  
-        .navbar-nav {
-          display: flex;
-          list-style-type: none;
-          margin: 0;
-          padding: 0;
-        }
-  
-        .nav-item {
-          margin-right: 10px;
-        }
-  
-        .avatar-container {
-          display: flex;
-          justify-content: center; /* Centra horizontalmente */
-          align-items: center; /* Centra verticalmente */
-          height: 20%; /* Ajusta la altura del contenedor */
-        }
-        
-        .example-card {
-          max-width: 400px;
-          margin-bottom: 8px;
-        }
-  
-        .inicio-card {
-          background-color: #053c7a;
-          color: white; /* Cambia el color del texto a blanco */
-        }
+}

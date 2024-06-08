@@ -1,15 +1,81 @@
-<mat-toolbar color="accent">DispenAPP
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responsive Design</title>
+  <style>
+
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+
+    @media only screen and (max-width: 400px) {
+      .avatar-container {
+        text-align: center;
+      }
+
+      .avatar {
+        width: 80px;
+        height: 80px;
+      }
+
+      .name {
+        text-align: center;
+      }
+
+      .menu-button {
+        display: block;
+        width: 100%;
+        text-align: left;
+      }
+
+      .menu-button span {
+        display: inline-block;
+        margin-left: 10px;
+      }
+    }
+
+    @media only screen and (min-width: 601px) and (max-width: 1024px) {
+      .avatar {
+        width: 100px;
+        height: 100px;
+      }
+
+      .name {
+        font-size: 1.2em;
+      }
+    }
+
+    @media only screen and (min-width: 1025px) {
+      .avatar {
+        width: 120px;
+        height: 120px;
+      }
+
+      .name {
+        font-size: 1.5em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <mat-toolbar color="accent">DispenAPP
+    <button mat-icon-button (click)="sidenav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+  </mat-toolbar>
   
-</mat-toolbar>
 
-<mat-sidenav-container>
-      <mat-divider></mat-divider>
-    <mat-sidenav mode="side" opened="true">
-
+  <mat-sidenav-container>
+    <mat-divider></mat-divider>
+    <mat-sidenav #sidenav mode="side" opened="true">
       <div class="avatar-container">
         <img class="avatar mat-elevation-z8" src="../../../assets/images/perfil.png" alt="Logo">
       </div>
-  
     
       <h4 class="name">Usuario</h4>
       <mat-divider></mat-divider>
@@ -38,28 +104,22 @@
         <span>Inventario</span>
       </button>
 
-      
-        <button mat-button class="menu-button" routerLink="/vencimiento">
-          <mat-icon>warning</mat-icon>
-          <span style="text-align:left">Proximos a vencer</span>
-        </button>
+      <button mat-button class="menu-button" routerLink="/vencimiento">
+        <mat-icon>warning</mat-icon>
+        <span style="text-align:left">Proximos a vencer</span>
+      </button>
     
       <mat-divider></mat-divider>
 
-     
       <button mat-button class="menu-button" (click)="logOut()">
         <mat-icon>exit_to_app</mat-icon>
         <span>Salir</span>
       </button>  
-   
-
     </mat-sidenav>
     
     <mat-sidenav-content>
-      
       <router-outlet></router-outlet>
     </mat-sidenav-content>
-    
   </mat-sidenav-container>
-
-  
+</body>
+</html>

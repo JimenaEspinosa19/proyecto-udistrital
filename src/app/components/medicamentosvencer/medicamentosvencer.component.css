@@ -1,51 +1,93 @@
-
 mat-toolbar {
-    background: #004a9f;
-    color: white;
-  }
-  
-  
-  mat-sidenav {
-    margin: 16px;
-    width: 200px;
-    border-right: none;
-    background: #002b5c;
-    color: white;
-    border-radius: 10px;
-    padding: 16px;
-    text-align: center;
-  }
-  
-  .content {
-    height: calc(100vh - 100px);
-    border-radius: 10px;
-    margin: 16px;
-    margin-left: 32px;
-  
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  
-    font-size: 2rem;
-    color: rgb(62, 87, 227);
+  background: #004a9f;
+  color: white;
+}
+
+mat-sidenav {
+  margin: 16px;
+  width: 200px;
+  border-right: none;
+  background: #002b5c;
+  color: white;
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+}
+
+.content {
+  height: calc(100vh - 100px);
+  border-radius: 10px;
+  margin: 16px;
+  margin-left: 32px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 2rem;
+  color: rgb(62, 87, 227);
+}
+
+.text-base {
+  font-size: 1rem; /* Reduciendo el tamaño de la fuente de las celdas */
+}
+
+.autocomplete-options {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.autocomplete-option {
+  padding: 8px;
+  cursor: pointer;
+  font-size: 14px; 
+}
+
+.autocomplete-option:hover {
+  background-color: #f0f0f0;
+}
+
+/* Media queries para pantallas más pequeñas */
+@media (max-width: 1000px) {
+  .max-w-7xl {
+      padding: 8px;
+      width: 100%;
+      box-sizing: border-box;
   }
 
-  .autocomplete-options {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
+  table, thead, tbody, th, td, tr {
+      display: block;
+      width: 100%;
   }
-  
-  .autocomplete-option {
-    padding: 8px;
-    cursor: pointer;
-    font-size: 14px; 
+
+  thead {
+      display: none;
   }
-  
-  .autocomplete-option:hover {
-    background-color: #f0f0f0;
+
+  tr {
+      margin-bottom: 10px;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      flex-direction: column;
   }
-  
-  
-  
-  
+
+  td {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 5px;
+      text-align: left;
+  }
+
+  td::before {
+      content: attr(data-label);
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-right: 10px;
+  }
+
+  button {
+      width: 100%;
+      margin-top: 8px;
+  }
+}

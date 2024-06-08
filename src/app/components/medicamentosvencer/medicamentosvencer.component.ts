@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from 'src/app/shared/services/data.service';
+import { HttpClient } from '@angular/common/http';
+import { AuthService } from 'src/app/shared/services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-medicamentosvencer',
@@ -12,11 +15,15 @@ export class MedicamentosvencerComponent implements OnInit {
   medicamentosFiltrados: any[] = [];
   medicamentosF: any[] =[];
   terminoBusqueda: string = '';
+  userEmail: string | null = '';
 
-  constructor(private dataService: DataService) { }
+  constructor(private dataService: DataService, private http: HttpClient,  private authService: AuthService,private router: Router) { }
 
   ngOnInit(): void {
     this.cargarMedicamentos();
+    this.authService.getUserEmail().subscribe(email => {
+      this.userEmail = email;
+    });
   }
 
   async cargarMedicamentos() {
@@ -50,4 +57,36 @@ export class MedicamentosvencerComponent implements OnInit {
         console.error('Los datos del medicamento son undefined');
       }
     }
-  }
+
+    async EnviarCorreo(medicamento: any) {
+      const asunto = 'Medicamento proximo a vecner en DispenAPP quedó reservado';
+      const cuerpo = `Se informa que tu medicamento ${medicamento.nombre} quedó reservado exitosamente.\n
+                      Nombre del medicamento: ${medicamento.nombre}\n
+                      Cantidad: ${medicamento.cantidad}\n
+                      Fecha de vencimiento: ${medicamento.fechaVencimiento}\n
+                      Teléfono: ${medicamento.telefono}\n
+                      Recuerde contactarse al número de telefono indicado para solicitar su entrega`;
+                      
+    
+      const correodata = {
+        to: this.userEmail,
+        subject: asunto,
+        message: cuerpo
+      };
+    
+      this.http.post<any>('https://us-central1-proyecto-final-8e4e0.cloudfunctions.net/mailer', correodata)
+        .subscribe(
+          response => {
+            console.log('correo enviado', response);
+          },
+          error => {
+            console.log('error al enviar correo', error);
+          }
+        );
+    }
+
+    volverAMedicamentos() {
+      this.router.navigate(['/vencimiento']);
+    }
+  
+}

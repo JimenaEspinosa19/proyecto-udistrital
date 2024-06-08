@@ -1,44 +1,39 @@
+<!-- proximosa-vencer.component.html -->
+
 <div class="content mat-elevation-z8" style="color: rgb(4, 4, 4); background-color: #f6eeee;">
-    <div class="max-w-md mx-auto bg-white p-10 shadow-md rounded-md" style="max-width: 500px;">
+  <div class="max-w-md mx-auto bg-white p-10 shadow-md rounded-md">
     <div class="flex justify-center">
-    <button class="bg-blue-600 text-white px-10 py-1 rounded-md text-sm" (click)="verMedicamentos()">Ver medicamentos</button>
+      <button class="bg-blue-600 text-white px-10 py-1 rounded-md text-sm" (click)="verMedicamentos()">Ver medicamentos</button>
     </div>
     <h2>¿Deseas registrar un medicamento?</h2>
-      <form (ngSubmit)="addMedicament(Nombre, cantidad, fechaVencimiento, telefono)">
-        <div>
-            <div class="mb-4">
-              <label class="block text-gray-700 text-sm font-bold mb-2" for="medicamentoInput">Medicamento:</label>
-              <input [(ngModel)]="nmedicamento" class="w-full px-3 py-2 border rounded-md text-sm" type="text" id="medicamentoInput" [formControl]="medicamentoControl">
-              <div class="autocomplete-options"*ngIf="medicamentosFiltrados | async as filteredMedicamentos">
-                <ul class="autocomplete-options">
-               <li class="autocomplete-option" *ngFor="let medicamento of filteredMedicamentos" (click)="selectMedicamento(medicamento)">
-                   {{ medicamento.Nombre }}
-                  </li>
-                </ul>
-              </div>
-            </div>
+    <form (ngSubmit)="addMedicament(Nombre, cantidad, fechaVencimiento, telefono)">
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="medicamentoInput">Medicamento:</label>
+        <input [(ngModel)]="nmedicamento" class="w-full px-3 py-2 border rounded-md text-sm" type="text" id="medicamentoInput" [formControl]="medicamentoControl">
+        <div class="autocomplete-options" *ngIf="medicamentosFiltrados | async as filteredMedicamentos">
+          <ul class="autocomplete-options">
+            <li class="autocomplete-option" *ngFor="let medicamento of filteredMedicamentos" (click)="selectMedicamento(medicamento)">
+              {{ medicamento.Nombre }}
+            </li>
+          </ul>
         </div>
-        <div class="mb-4">
-          <label class="block text-gray-700 text-sm font-bold mb-2" for="cantidadInput">Cantidad:</label>
-          <input class="w-full px-3 py-2 border rounded-md text-sm" type="number" id="cantidadInput" [(ngModel)]="cantidad" name="cantidad">
-        </div>
-  
-        <div class="mb-4">
-          <label class="block text-gray-700 text-sm font-bold mb-2" for="fechaInput">Fecha de vencimiento:</label>
-          <input class="w-full px-3 py-2 border rounded-md text-sm" type="date" id="fechaInput" [(ngModel)]="fechaVencimiento" name="fechaVencimiento">
-        </div>
-
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="cantidadInput">Telefono de contacto:</label>
-            <input class="w-full px-3 py-2 border rounded-md text-sm" type="text" id="telefono" [(ngModel)]="telefono" name="telefono">
-          </div>
-  
-        <div class="flex justify-center">
-          <button type="submit" class="bg-blue-600 text-white px-10 py-1 rounded-md text-sm">Registrar</button>
-        </div>
-      </form>
-      <div id="mensaje" class="text-blue-600 text-xs mt-2" [class.hidden]="!mensaje">{{ mensaje }}</div>
-    </div>
+      </div>
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="cantidadInput">Cantidad:</label>
+        <input class="w-full px-3 py-2 border rounded-md text-sm" type="number" id="cantidadInput" [(ngModel)]="cantidad" name="cantidad">
+      </div>
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="fechaInput">Fecha de vencimiento:</label>
+        <input class="w-full px-3 py-2 border rounded-md text-sm" type="date" id="fechaInput" [(ngModel)]="fechaVencimiento" name="fechaVencimiento">
+      </div>
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="telefonoInput">Teléfono de contacto:</label>
+        <input class="w-full px-3 py-2 border rounded-md text-sm" type="text" id="telefonoInput" [(ngModel)]="telefono" name="telefono">
+      </div>
+      <div class="flex justify-center">
+        <button type="submit" class="bg-blue-600 text-white px-10 py-1 rounded-md text-sm">Registrar</button>
+      </div>
+    </form>
+    <div id="mensaje" class="text-blue-600 text-xs mt-2" [class.hidden]="!mensaje">{{ mensaje }}</div>
   </div>
-
-  
+</div>

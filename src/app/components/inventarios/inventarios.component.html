@@ -1,37 +1,37 @@
-<div class="content mat-elevation-z8" style="color: rgb(4, 4, 4); background-color: #f3ecec;">
+<div class="content mat-elevation-z8" style="color: rgb(4, 4, 4); background-color: #f6eeee;">
   <div class="max-w-7xl mx-auto bg-white p-6 shadow-md rounded-md">
     <h2 class="text-xl font-semibold mb-4">Inventario de Medicamentos</h2>
-    <div class="flex mb-4">
-      <input type="text" class="form-input rounded-md w-full text-lg" placeholder="Buscar medicamento..." [(ngModel)]="terminoBusqueda" (input)="buscarMedicamento()">
+    <div class="flex flex-col lg:flex-row mb-4">
+      <label for="search" class="sr-only">Buscar medicamento:</label>
+      <input type="text" id="search" class="form-input rounded-md w-full lg:w-1/2 text-lg mb-2 lg:mr-2" placeholder="Buscar medicamento..." [(ngModel)]="terminoBusqueda" (input)="buscarMedicamento()">
     </div>
-    
-    <table class="w-full divide-y divide-gray-200 text-lg">
-      <thead class="bg-gray-50">
-        <tr>
-          <th scope="col" class="px-6 py-3 text-left font-light text-gray-700 uppercase tracking-wider">Nombre del Medicamento</th>
-          <th scope="col" class="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Cantidad</th>
-          <th scope="col" class="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Ciudad</th>
-          <th scope="col" class="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Entidad</th>
-          <th scope="col" class="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Dirección</th>
-          <th scope="col" class="relative px-6 py-3"></th>
-        </tr>
-      </thead>
-      <tbody class="bg-white divide-y divide-gray-200">
-        <tr *ngFor="let item of medicamentosFiltrados; let i = index">
-          <td class="px-6 py-4 whitespace-nowrap">{{ item.nmedicamento }}</td>
-          <td class="px-6 py-4 whitespace-nowrap">{{ item.cantidad }}</td>
-          <td class="px-6 py-4 whitespace-nowrap">{{ item.ciudad }}</td>
-          <td class="px-6 py-4 whitespace-nowrap">{{ item.entidad }}</td>
-          <td class="px-6 py-4 whitespace-nowrap">{{ item.direcciones }}</td>
-          <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-            <button class="text-red-600 hover:text-red-900 mr-3" (click)="EliminarMedicamento(item)">Eliminar</button>
 
-            <button class="text-indigo-600 hover:text-indigo-900" (click)="ModificarMedicamento(item.nmedicamento, item.entidad, item.direcciones, item.cantidad, item.ciudad)">Modificar</button>
-
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="table-responsive">
+      <table class="w-full text-lg">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left font-light text-gray-700 uppercase tracking-wider">Nombre del Medicamento</th>
+            <th class="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Cantidad</th>
+            <th class="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Ciudad</th>
+            <th class="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Entidad</th>
+            <th class="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Dirección</th>
+            <th class="px-6 py-3 text-right font-medium text-gray-700 uppercase tracking-wider">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <tr *ngFor="let item of medicamentosFiltrados; let i = index">
+            <td class="px-6 py-4 whitespace-nowrap" data-label="Nombre del Medicamento">{{ item.nmedicamento }}</td>
+            <td class="px-6 py-4 whitespace-nowrap" data-label="Cantidad">{{ item.cantidad }}</td>
+            <td class="px-6 py-4 whitespace-nowrap" data-label="Ciudad">{{ item.ciudad }}</td>
+            <td class="px-6 py-4 whitespace-nowrap" data-label="Entidad">{{ item.entidad }}</td>
+            <td class="px-6 py-4 whitespace-nowrap" data-label="Dirección">{{ item.direcciones }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-right" data-label="Acciones">
+              <button class="text-red-600 hover:text-red-900 mr-3" (click)="EliminarMedicamento(item)">Eliminar</button>
+              <button class="text-indigo-600 hover:text-indigo-900" (click)="ModificarMedicamento(item.nmedicamento, item.entidad, item.direcciones, item.cantidad, item.ciudad)">Modificar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
-
