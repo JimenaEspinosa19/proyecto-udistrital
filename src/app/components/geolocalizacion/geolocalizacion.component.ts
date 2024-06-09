@@ -7,18 +7,15 @@ import { ElementRef, ViewChild, Renderer2 } from '@angular/core'
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 
-
-
-
 @Component({
   selector: 'app-geolocalizacion',
   templateUrl: './geolocalizacion.component.html',
   styleUrls: ['./geolocalizacion.component.css']
 })
 export class GeolocalizacionComponent {
-  directionsRenderer: google.maps.DirectionsRenderer | undefined;
+  directionsRenderers: google.maps.DirectionsRenderer[] = [];
+  publicRoutes: any[] = []; // Array to store public transport routes
 
-  
   @ViewChild('divMap') divMap!: ElementRef;
   @ViewChild('inputPlaces') inputPlaces!: ElementRef;
 
@@ -33,18 +30,13 @@ export class GeolocalizacionComponent {
   modoTransporte: string = 'DRIVING'; 
   posicionActual: any;
   
-
-
-  constructor(private renderer: Renderer2, private route: ActivatedRoute,private router: Router) {
+  constructor(private renderer: Renderer2, private route: ActivatedRoute, private router: Router) {
     this.markers = [];
-
   }
 
   ngOnInit(): void {
     this.direccionRecibida = history.state.direccionSeleccionada;
     console.log('Dirección recibida:', this.direccionRecibida);
-  
-  
   }
 
   ngAfterViewInit(): void {
@@ -68,58 +60,64 @@ export class GeolocalizacionComponent {
     console.log("Datos del formulario: ", this.formMapas.value)
   };
 
-
   mapRuta(): void {
     this.limpiarMapa();
 
     const directionService = new google.maps.DirectionsService();
-    const directionRender = new google.maps.DirectionsRenderer();
-    directionRender.setMap(this.mapa);
-
-    // Almacenar una referencia al DirectionsRenderer creado
-    this.directionsRenderer = directionRender;
-  
+    
     directionService.route({
       origin: new google.maps.LatLng(this.posicionActual.coords.latitude, this.posicionActual.coords.longitude),
       destination: this.direccionRecibida,
       travelMode: this.modoTransporte as google.maps.TravelMode 
     }, (resultado, estado) => {
-      if (estado === google.maps.DirectionsStatus.OK && resultado.routes && resultado.routes.length > 0 && resultado.routes[0].legs && resultado.routes[0].legs.length > 0) {
+      if (estado === google.maps.DirectionsStatus.OK && resultado.routes && resultado.routes.length > 0) {
         console.log(resultado);
-        directionRender.setDirections(resultado);
-        this.distancia = resultado.routes[0].legs[0].distance.text;
-        this.tiempoEstimado = resultado.routes[0].legs[0].duration.text; // Aquí almacenamos el tiempo estimado
+        this.publicRoutes = resultado.routes; // Store the routes for displaying in the list
+
+        // Iterar sobre todas las rutas encontradas
+        resultado.routes.forEach((route, index) => {
+          const directionRender = new google.maps.DirectionsRenderer({
+            map: this.mapa,
+            directions: resultado,
+            routeIndex: index
+          });
+
+          // Almacenar cada DirectionsRenderer creado
+          this.directionsRenderers.push(directionRender);
+
+          // Mostrar distancia y tiempo estimado solo para la primera ruta
+          if (index === 0 && route.legs && route.legs.length > 0) {
+            this.distancia = route.legs[0].distance.text;
+            this.tiempoEstimado = route.legs[0].duration.text;
+          }
+        });
       } else {
         console.error('No se pudo calcular la ruta:', estado);
       }
     });
-}
+  }
 
-limpiarMapa(): void {
-    // Limpiar marcadores anteriores
+  limpiarMapa(): void {
     this.markers.forEach(marker => {
       marker.setMap(null);
     });
     this.markers = [];
 
-    // Limpiar la ruta anterior si existe la referencia
-    if (this.directionsRenderer) {
-      this.directionsRenderer.setMap(null);
-    }
-}
+    // Limpiar todas las rutas anteriores
+    this.directionsRenderers.forEach(renderer => renderer.setMap(null));
+    this.directionsRenderers = [];
+  }
   
   seleccionarModo(modo: string) {
     this.modoTransporte = modo;
     this.actualizarModoTransporte();
-}
+  }
 
   actualizarModoTransporte(): void {
     this.mapRuta(); 
   }
 
-
   cargarMapa(position: any): any {
-
     const opciones = {
       center: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
       zoom: 17,
@@ -146,18 +144,11 @@ limpiarMapa(): void {
 
       google.maps.event.addListener(marker, 'click', (event) => { 
         marker.setMap(null);
-        
-      })
-
-    })
-
-
-  };
+      });
+    });
+  }
 
   volver(){
-
     this.router.navigate(['/medicamentos']);
   }
-  
-
 }

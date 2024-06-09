@@ -61,3 +61,22 @@ form {
 .boton-azul:hover {
   background-color: #053c7a; 
 }
+
+.opciones-transporte {
+  margin-top: 20px;
+}
+
+.opciones-transporte button {
+  display: block;
+  margin: 5px 0;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.opciones-transporte button:hover {
+  background-color: #0056b3;
+}

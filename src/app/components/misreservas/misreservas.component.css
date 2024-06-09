@@ -26,7 +26,7 @@ mat-sidenav {
   align-items: flex-start;
   font-size: 2rem;
   color: lightgray;
-  overflow: auto; 
+  overflow: auto; /* Añadido para scroll en contenido */
 }
 
 mat-sidenav-container {
@@ -55,9 +55,9 @@ mat-icon {
 
 .name {
   margin-top: 8px;
-  font-weight: medium;
-  overflow-wrap: break-word; 
-  word-break: break-word; 
+  font-weight: normal;
+  overflow-wrap: break-word; /* Añadido para evitar que el texto se salga del borde */
+  word-break: break-word; /* Añadido para evitar que el texto se salga del borde */
 }
 
 .designation {

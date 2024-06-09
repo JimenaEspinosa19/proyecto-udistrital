@@ -30,7 +30,7 @@ export class RegistrarComponent {
   medicamentosFiltrados!: Observable<any[]>;
   entidadesDirecciones: { [entidad: string]: string[] } = {};
   userEmail: string | null = '';
-  
+  mostrarOpciones: boolean = true;
   medicamentoDisponible: boolean = false;
   mensajeDisponibilidad: string = '';
   mensajeError: string = '';
@@ -94,14 +94,16 @@ export class RegistrarComponent {
   
     const MAX_MEDICAMENTOS = 3; 
     const medicamentosFiltrados = this.opcionesMedicamentos.filter(option => option.Nombre.toLowerCase().includes(filterValue));
-    return medicamentosFiltrados.slice(0, MAX_MEDICAMENTOS); // Devuelve solo los primeros MAX_MEDICAMENTOS elementos
+    return medicamentosFiltrados.slice(0, MAX_MEDICAMENTOS);
+    
 }
 
+selectMedicamento(medicamento: any) {
+  this.Nombre = medicamento.Nombre;
+  this.medicamentoControl.setValue(medicamento.Nombre, { emitEvent: false });
 
-  selectMedicamento(medicamento: any) {
-    this.Nombre = medicamento.Nombre; 
-    this.medicamentoControl.setValue(medicamento.Nombre); 
-  }
+}
+
 
   async buscarMedicamento() { 
     if (!this.nmedicamento || !this.entidad || !this.direccionSeleccionada || !this.ciudad || !this.cantidad) {

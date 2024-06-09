@@ -12,7 +12,7 @@ export class MisreservasComponent implements OnInit {
   reservasFiltradas: any[] = [];
   userID: string | null = null;
   currentPage: number = 1;
-  itemsPerPage: number = 10;
+  itemsPerPage: number = 6;
   totalPages: number = 1;
   loading: boolean = true;
 
