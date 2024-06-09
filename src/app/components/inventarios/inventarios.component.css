@@ -33,90 +33,65 @@
   background-color: #ffffff;
 }
 
-.menu-button {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  font-size: 1rem;
+.content {
+  max-width: 100%;
+  padding: 1rem;
 }
 
-.avatar {
-  margin-top: 16px;
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-}
-
-.name {
-  margin-top: 8px;
-  font-weight: normal;
-}
-
-.designation {
-  margin-top: 2px;
-  font-size: 0.7rem;
-  color: lightgrey;
-}
-
-.mat-divider {
-  margin-top: 16px;
-  margin-bottom: 16px;
-  background-color: rgba(255, 255, 255, 0.5);
-}
-
-.fixed-table {
-  width: calc(100% - 48px);
+.max-w-5xl {
+  max-width: 80vw; 
 }
 
 .table-responsive {
   overflow-x: auto;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
+.table-responsive table {
+  min-width: 100%;
 }
 
-th, td {
-  padding: 12px;
-  border-bottom: 1px solid #000000;
+.table-responsive th,
+.table-responsive td {
+  padding: 0.5rem; 
 }
 
-th {
-  background-color: #f3f4f6;
-  text-transform: uppercase;
-  font-weight: 500;
-  text-align: left;
-}
-
-td {
-  text-align: left;
-}
-
-@media only screen and (min-width: 768px) {
-  .content {
-    font-size: 1.2rem;
-  }
-}
-
-@media only screen and (max-width: 768px) {
-  th, td {
+@media (max-width: 1000px) {
+  .table-responsive table,
+  .table-responsive thead,
+  .table-responsive tbody,
+  .table-responsive th,
+  .table-responsive td,
+  .table-responsive tr {
     display: block;
-    width: 100%;
   }
 
-  td::before {
-    content: attr(data-label);
-    font-weight: bold;
-    display: inline-block;
-    width: 50%;
-    margin-right: 5%;
+  .table-responsive thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+
+  .table-responsive tr {
+    border: 1px solid #ddd;
+  }
+
+  .table-responsive td {
+    border: none;
+    border-bottom: 1px solid #ddd;
+    position: relative;
+    padding-left: 50%;
+    white-space: normal;
     text-align: left;
   }
 
-  td[data-label] {
-    padding-left: 50%;
-    position: relative;
+  .table-responsive td:before {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+    content: attr(data-label);
+    font-weight: bold;
   }
 }

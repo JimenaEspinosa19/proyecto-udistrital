@@ -1,35 +1,51 @@
 <div class="content mat-elevation-z8" style="color: rgb(4, 4, 4); background-color: #f3ecec;">
-    <div class="max-w-7xl mx-auto bg-white p-6 shadow-md rounded-md">
-        <h2 class="text-xl font-semibold mb-4">Reservas de Medicamentos</h2>
-        <table class="w-full divide-y divide-gray-200 text-xs">
+    <div class="max-w-7xl mx-auto bg-white p-6 shadow-md rounded-md text-lg">
+      <h2 class="text-xl font-semibold mb-4">Reservas de Medicamentos</h2>
+  
+      <div *ngIf="loading" class="flex justify-center items-center h-full">
+        <span class="text-gray-700 text-lg">Cargando...</span>
+      </div>
+  
+      <div *ngIf="!loading">
+        <div class="table-responsive">
+          <table class="w-full divide-y divide-gray-200 text-base">
             <thead class="bg-blue-50">
-                <tr>
-                    <th scope="col" class="px-3 py-2 text-left font-medium text-gray-700 uppercase tracking-wider">Nombre</th>
-                    <th scope="col" class="px-3 py-2 text-left font-medium text-gray-700 uppercase tracking-wider">N.identificación</th>
-                    <th scope="col" class="px-3 py-2 text-left font-medium text-gray-700 uppercase tracking-wider">Medicamento</th>
-                    <th scope="col" class="px-3 py-2 text-left font-medium text-gray-700 uppercase tracking-wider">Cantidad</th>
-                    <th scope="col" class="px-3 py-2 text-left font-medium text-gray-700 uppercase tracking-wider">Entidad</th>
-                    <th scope="col" class="px-3 py-2 text-left font-medium text-gray-700 uppercase tracking-wider">Dirección</th>
-                    <th scope="col" class="px-3 py-2 text-left font-medium text-gray-700 uppercase tracking-wider">Fecha de Reserva</th>
-                    <th scope="col" class="px-3 py-2 text-left font-medium text-gray-700 uppercase tracking-wider">Hora de Reserva</th>
-                    <th scope="col" class="relative px-3 py-2"></th>
-                </tr>
+              <tr>
+                <th class="px-4 py-2 text-left font-medium text-gray-700 uppercase tracking-wider">Nombre</th>
+                <th class="px-3 py-2 text-left font-medium text-gray-700 uppercase tracking-wider">cedula</th>
+                <th class="px-1 py-2 text-left font-medium text-gray-700 uppercase tracking-wider">Medicamento</th>
+                <th class="px-4 py-2 text-left font-medium text-gray-700 uppercase tracking-wider">Cantidad</th>
+                <th class="px-4 py-2 text-left font-medium text-gray-700 uppercase tracking-wider">Entidad</th>
+                <th class="px-4 py-2 text-left font-medium text-gray-700 uppercase tracking-wider">Dirección</th>
+                <th class="px-4 py-2 text-left font-medium text-gray-700 uppercase tracking-wider">Fecha de Reserva</th>
+                <th class="px-4 py-2 text-left font-medium text-gray-700 uppercase tracking-wider">Hora de Reserva</th>
+                <th class="relative px-4 py-2"></th>
+              </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
-                <tr *ngFor="let item of reservas;">
-                    <td class="px-3 py-2 whitespace-nowrap" data-label="Nombre">{{ item.nombre }}</td>
-                    <td class="px-3 py-2 whitespace-nowrap" data-label="N.identificación">{{ item.identificacion }}</td>
-                    <td class="px-3 py-2 whitespace-nowrap" data-label="Medicamento">{{ item.nmedicamento }}</td>
-                    <td class="px-3 py-2 whitespace-nowrap" data-label="Cantidad">{{ item.cantidad }}</td>
-                    <td class="px-3 py-2 whitespace-nowrap" data-label="Entidad">{{ item.entidad }}</td>
-                    <td class="px-3 py-2 whitespace-nowrap" data-label="Dirección">{{ item.direccionSeleccionada }}</td>
-                    <td class="px-3 py-2 whitespace-nowrap" data-label="Fecha de Reserva">{{ item.fechaReserva }}</td>
-                    <td class="px-3 py-2 whitespace-nowrap" data-label="Hora de Reserva">{{ item.horaReserva }}</td>
-                    <td class="px-3 py-2 whitespace-nowrap text-right text-xs font-medium">
-                        <button class="text-indigo-600 hover:text-indigo-900" (click)="cancelarReserva(item)">Cancelar</button>
-                    </td>
-                </tr>
+              <tr *ngFor="let item of reservasFiltradas | slice:(currentPage-1)*itemsPerPage:(currentPage)*itemsPerPage; let i = index">
+                <td class="px-4 py-2 whitespace-nowrap" data-label="Nombre">{{ item.nombre }}</td>
+                <td class="px-2 py-2 whitespace-nowrap" data-label="N.identificación">{{ item.identificacion }}</td>
+                <td class="px-2 py-2 whitespace-nowrap" data-label="Medicamento">{{ item.nmedicamento }}</td>
+                <td class="px-4 py-2 whitespace-nowrap" data-label="Cantidad">{{ item.cantidad }}</td>
+                <td class="px-4 py-2 whitespace-nowrap" data-label="Entidad">{{ item.entidad }}</td>
+                <td class="px-4 py-2 whitespace-nowrap" data-label="Dirección">{{ item.direccionSeleccionada }}</td>
+                <td class="px-4 py-2 whitespace-nowrap" data-label="Fecha de Reserva">{{ item.fechaReserva }}</td>
+                <td class="px-4 py-2 whitespace-nowrap" data-label="Hora de Reserva">{{ item.horaReserva }}</td>
+                <td class="px-4 py-2 whitespace-nowrap text-right">
+                  <button class="text-indigo-600 hover:text-indigo-900" (click)="cancelarReserva(item)">Cancelar</button>
+                </td>
+              </tr>
             </tbody>
-        </table>
+          </table>
+        </div>
+  
+        <div class="flex justify-between items-center mt-4">
+          <button class="px-2 py-1 bg-gray-200 text-sm rounded-md" (click)="prevPage()" [disabled]="currentPage === 1">Anterior</button>
+          <span class="text-sm">Página {{currentPage}} de {{totalPages}}</span>
+          <button class="px-2 py-1 bg-gray-200 text-sm rounded-md" (click)="nextPage()" [disabled]="currentPage === totalPages">Siguiente</button>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
+  

@@ -62,9 +62,9 @@ export class MedicamentosComponent implements OnInit {
     }
     if (this.entidades.length > 0) {
       this.entidad = this.entidades[0]; 
-      await this.updateDireccionesFiltradas(); // Esperar a que se actualicen las direcciones
+      await this.updateDireccionesFiltradas(); 
       if (this.direccionesFiltradas.length > 0) {
-        this.direccionSeleccionada = this.direccionesFiltradas[0]; // Seleccionar la primera dirección
+        this.direccionSeleccionada = this.direccionesFiltradas[0]; 
       }
     }
   }
@@ -77,57 +77,61 @@ export class MedicamentosComponent implements OnInit {
     const filterValue = value.toLowerCase();
     if (!filterValue || !this.opcionesMedicamentos) {      
         return [];
-    }
-    // Limitar el número de elementos a mostrar
-    const MAX_MEDICAMENTOS = 3; // Define el número máximo de medicamentos a mostrar
+    }  
+    const MAX_MEDICAMENTOS = 3; 
     const medicamentosFiltrados = this.opcionesMedicamentos.filter(option => option.Nombre.toLowerCase().includes(filterValue));
-    return medicamentosFiltrados.slice(0, MAX_MEDICAMENTOS); // Devuelve solo los primeros MAX_MEDICAMENTOS elementos
+   
+    return medicamentosFiltrados.slice(0, MAX_MEDICAMENTOS); 
 }
 
 
   selectMedicamento(medicamento: any) {
     this.Nombre = medicamento.Nombre; 
     this.medicamentoControl.setValue(medicamento.Nombre); 
+    
+
+
   }
 
+  
   async buscarMedicamento() { 
     if (!this.nmedicamento || !this.entidad || !this.direccionSeleccionada || !this.ciudad || !this.cantidad) {
       this.mensajeError = 'Todos los campos deben estar llenos.';
       console.log('Todos los campos deben estar llenos.');
       return; 
     }
-
+  
     const cantidadNumerica = parseInt(this.cantidad);
     console.log('CANTIDAD FINAL', cantidadNumerica)
-
+  
     if (isNaN(cantidadNumerica) || cantidadNumerica <= 0) {
       this.mensajeError = 'La cantidad del medicamento no es valida,';
       console.log('La cantidad ingresada no es válida.');
       return; 
     }
-
+  
     const direccion = this.direccionSeleccionada;
     const medicamentos = await this.dataService.getMedicamentosTodos();
-
+  
     const medicamentoExistente = medicamentos.find(medicamento =>
       medicamento['nmedicamento'] === this.nmedicamento &&
       medicamento['direcciones'].includes(this.direccionSeleccionada) && 
       medicamento['entidad'] === this.entidad &&
       medicamento['ciudad'] === this.ciudad
     );
-
+  
     if (medicamentoExistente) {
       if (medicamentoExistente['cantidad'] >= cantidadNumerica) {
         this.dataService.setDatosCliente(this.nmedicamento, this.entidad, this.direccionSeleccionada, this.cantidad, this.ciudad);
-  
         this.medicamentoDisponible = true;
         this.mensajeDisponibilidad = 'El medicamento está disponible en esta dirección y ciudad.';
+    
+        this.mensajeError = '';
       } else {
         this.dataService.setDatosCliente(this.nmedicamento, this.entidad, this.direccionSeleccionada, this.cantidad,this.ciudad);
         this.medicamentoDisponible = false;
         this.mensajeDisponibilidad = 'El medicamento requerido no está disponible. ¿Qué acción desea realizar?';
         this.mostrarBotonesNotificacionYPuntos = true; 
-
       }
     } else {
       this.dataService.setDatosCliente(this.nmedicamento, this.entidad, this.direccionSeleccionada, this.cantidad,this.ciudad);
@@ -136,7 +140,6 @@ export class MedicamentosComponent implements OnInit {
       this.mostrarBotonesNotificacionYPuntos = true; 
     }
   }
-
 
   async reservarMedicamento() {
     this.router.navigate(['/reservas']);
@@ -149,7 +152,7 @@ export class MedicamentosComponent implements OnInit {
     if (this.ciudad) {
       this.epsSeleccionada = await this.dataService.getEPSByCiudad(this.ciudad);
       await this.onChangeEPS(this.epsSeleccionada[0]); 
-      await this.updateDireccionesFiltradas(); // Actualizar las direcciones filtradas
+      await this.updateDireccionesFiltradas(); 
     }
   }
   
@@ -166,7 +169,7 @@ export class MedicamentosComponent implements OnInit {
   
 
   async updateDireccionesFiltradas() {
-  if (this.entidad && this.ciudad) { // Verificar que tanto la entidad como la ciudad estén definidas
+  if (this.entidad && this.ciudad) {
     this.direccionesFiltradas = await this.dataService.getDireccionesPorEntidadYCiudad(this.entidad, this.ciudad);
   }
 }

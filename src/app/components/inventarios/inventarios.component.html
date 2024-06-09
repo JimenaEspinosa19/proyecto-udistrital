@@ -1,37 +1,50 @@
 <div class="content mat-elevation-z8" style="color: rgb(4, 4, 4); background-color: #f6eeee;">
-  <div class="max-w-7xl mx-auto bg-white p-6 shadow-md rounded-md">
+  <div class="max-w-5xl mx-auto bg-white p-6 shadow-md rounded-md text-lg">
     <h2 class="text-xl font-semibold mb-4">Inventario de Medicamentos</h2>
-    <div class="flex flex-col lg:flex-row mb-4">
-      <label for="search" class="sr-only">Buscar medicamento:</label>
-      <input type="text" id="search" class="form-input rounded-md w-full lg:w-1/2 text-lg mb-2 lg:mr-2" placeholder="Buscar medicamento..." [(ngModel)]="terminoBusqueda" (input)="buscarMedicamento()">
+    
+    <div *ngIf="loading" class="flex justify-center items-center h-full">
+      <span class="text-gray-700 text-lg">Cargando...</span>
     </div>
 
-    <div class="table-responsive">
-      <table class="w-full text-lg">
-        <thead class="bg-gray-50">
-          <tr>
-            <th class="px-6 py-3 text-left font-light text-gray-700 uppercase tracking-wider">Nombre del Medicamento</th>
-            <th class="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Cantidad</th>
-            <th class="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Ciudad</th>
-            <th class="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Entidad</th>
-            <th class="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Dirección</th>
-            <th class="px-6 py-3 text-right font-medium text-gray-700 uppercase tracking-wider">Acciones</th>
-          </tr>
-        </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-          <tr *ngFor="let item of medicamentosFiltrados; let i = index">
-            <td class="px-6 py-4 whitespace-nowrap" data-label="Nombre del Medicamento">{{ item.nmedicamento }}</td>
-            <td class="px-6 py-4 whitespace-nowrap" data-label="Cantidad">{{ item.cantidad }}</td>
-            <td class="px-6 py-4 whitespace-nowrap" data-label="Ciudad">{{ item.ciudad }}</td>
-            <td class="px-6 py-4 whitespace-nowrap" data-label="Entidad">{{ item.entidad }}</td>
-            <td class="px-6 py-4 whitespace-nowrap" data-label="Dirección">{{ item.direcciones }}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-right" data-label="Acciones">
-              <button class="text-red-600 hover:text-red-900 mr-3" (click)="EliminarMedicamento(item)">Eliminar</button>
-              <button class="text-indigo-600 hover:text-indigo-900" (click)="ModificarMedicamento(item.nmedicamento, item.entidad, item.direcciones, item.cantidad, item.ciudad)">Modificar</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div *ngIf="!loading">
+      <div class="flex flex-col lg:flex-row mb-4">
+        <label for="search" class="sr-only">Buscar medicamento:</label>
+        <input type="text" id="search" class="form-input rounded-md w-full lg:w-1/2 text-lg mb-2 lg:mr-2" placeholder="Buscar medicamento..." [(ngModel)]="terminoBusqueda" (input)="buscarMedicamento()">
+      </div>
+
+      <div class="table-responsive">
+        <table class="w-full text-base">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-4 py-2 text-left font-light text-gray-700 uppercase tracking-wider">Medicamento</th>
+              <th class="px-4 py-2 text-left font-medium text-gray-700 uppercase tracking-wider">Cantidad</th>
+              <th class="px-4 py-2 text-left font-medium text-gray-700 uppercase tracking-wider">Ciudad</th>
+              <th class="px-4 py-2 text-left font-medium text-gray-700 uppercase tracking-wider">Entidad</th>
+              <th class="px-4 py-2 text-left font-medium text-gray-700 uppercase tracking-wider">Dirección</th>
+              <th class="px-4 py-2 text-right font-medium text-gray-700 uppercase tracking-wider">Acciones</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr *ngFor="let item of medicamentosFiltrados | slice:(currentPage-1)*itemsPerPage:(currentPage)*itemsPerPage; let i = index">
+              <td class="px-4 py-2 whitespace-nowrap" data-label="Nombre del Medicamento">{{ item.nmedicamento }}</td>
+              <td class="px-4 py-2 whitespace-nowrap" data-label="Cantidad">{{ item.cantidad }}</td>
+              <td class="px-4 py-2 whitespace-nowrap" data-label="Ciudad">{{ item.ciudad }}</td>
+              <td class="px-4 py-2 whitespace-nowrap" data-label="Entidad">{{ item.entidad }}</td>
+              <td class="px-4 py-2 whitespace-nowrap" data-label="Dirección">{{ item.direcciones }}</td>
+              <td class="px-4 py-2 whitespace-nowrap text-right" data-label="Acciones">
+                <button class="text-red-600 hover:text-red-900 mr-3" (click)="EliminarMedicamento(item)">Eliminar</button>
+                <button class="text-indigo-600 hover:text-indigo-900" (click)="ModificarMedicamento(item.nmedicamento, item.entidad, item.direcciones, item.cantidad, item.ciudad)">Modificar</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="flex justify-between items-center mt-4">
+        <button class="px-2 py-1 bg-gray-200 text-sm rounded-md" (click)="prevPage()" [disabled]="currentPage === 1">Anterior</button>
+        <span class="text-sm">Página {{currentPage}} de {{totalPages}}</span>
+        <button class="px-2 py-1 bg-gray-200 text-sm rounded-md" (click)="nextPage()" [disabled]="currentPage === totalPages">Siguiente</button>
+      </div>
     </div>
   </div>
 </div>

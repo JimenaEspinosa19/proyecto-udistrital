@@ -26,7 +26,7 @@ mat-sidenav {
   align-items: flex-start;
   font-size: 2rem;
   color: lightgray;
-  overflow: auto; /* Añadido para scroll en contenido */
+  overflow: auto; 
 }
 
 mat-sidenav-container {
@@ -55,9 +55,9 @@ mat-icon {
 
 .name {
   margin-top: 8px;
-  font-weight: normal;
-  overflow-wrap: break-word; /* Añadido para evitar que el texto se salga del borde */
-  word-break: break-word; /* Añadido para evitar que el texto se salga del borde */
+  font-weight: medium;
+  overflow-wrap: break-word; 
+  word-break: break-word; 
 }
 
 .designation {
@@ -113,17 +113,16 @@ mat-divider {
 }
 
 table {
-  table-layout: fixed; /* Añadido para que las celdas no se expandan más allá del ancho de la tabla */
-  width: 100%; /* Asegura que la tabla ocupe el ancho completo del contenedor */
+  table-layout: fixed; 
+  width: 100%; 
 }
 
 th, td {
-  overflow-wrap: break-word; /* Añadido para evitar que el texto se salga del borde */
-  word-break: break-word; /* Añadido para evitar que el texto se salga del borde */
-  white-space: normal; /* Asegura que el texto pueda romperse en varias líneas */
+  overflow-wrap: break-word; 
+  word-break: break-word; 
+  white-space: normal; 
 }
 
-/* Responsive adjustments */
 @media (max-width: 1000px) {
   mat-sidenav {
       width: 100%;

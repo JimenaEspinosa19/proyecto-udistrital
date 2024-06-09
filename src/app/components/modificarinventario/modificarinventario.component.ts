@@ -51,4 +51,7 @@ ngOnInit(): void {
     );
     this.mensajeDisponibilidad = 'El medicamento fue modificado correctamente';
   }
+  volverAMedicamentos() {
+    this.router.navigate(['/inventarios']);
+  }
 }

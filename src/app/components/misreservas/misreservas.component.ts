@@ -7,42 +7,53 @@ import { AuthService } from 'src/app/shared/services/auth.service';
   templateUrl: './misreservas.component.html',
   styleUrls: ['./misreservas.component.css']
 })
-
-
 export class MisreservasComponent implements OnInit {
   reservas: any[] = [];
-  userID: string | null = null; 
+  reservasFiltradas: any[] = [];
+  userID: string | null = null;
+  currentPage: number = 1;
+  itemsPerPage: number = 10;
+  totalPages: number = 1;
+  loading: boolean = true;
 
   constructor(private dataService: DataService, private authService: AuthService) { }
-  async ngOnInit(): Promise<void> {
+
+  ngOnInit(): void {
+    this.loadReservas();
+  }
+
+  async loadReservas() {
     try {
-      this.userID = await this.authService.getCurrentUserID(); 
-      this.cargarReservas();
+      this.userID = await this.authService.getCurrentUserID();
+      if (this.userID) {
+        const reservasPromise = this.userID === '9lGePCMR5VOdeCyHPQTYhZo5pXV2'
+          ? this.dataService.getTodasLasReservas(this.userID)
+          : this.dataService.getReservas(this.userID);
+        reservasPromise.then(reservas => {
+          this.reservas = reservas;
+          this.reservasFiltradas = [...this.reservas];
+          this.totalPages = Math.ceil(this.reservasFiltradas.length / this.itemsPerPage);
+          this.loading = false;
+        }).catch(error => {
+          console.error('Error al cargar reservas:', error);
+        });
+      } else {
+        console.error('ID de usuario no disponible');
+      }
     } catch (error) {
       console.error('Error al obtener el ID del usuario:', error);
     }
   }
-  
 
-  cargarReservas() {
-    if (this.userID) { 
-      if (this.userID === 'mqCqaf7FVXWkEiG1pfegzEYKEFn2') {
-        this.dataService.getTodasLasReservas(this.userID).then(reservas => {
-          this.reservas = reservas;
-          console.log(this.reservas);
-        }).catch(error => {
-          console.error('Error al cargar todas las reservas:', error);
-        });
-      } else {
-        this.dataService.getReservas(this.userID).then(reservas => {
-          this.reservas = reservas;
-          console.log(this.reservas);
-        }).catch(error => {
-          console.error('Error al cargar reservas del usuario actual:', error);
-        });
-      }
-    } else {
-      console.error('ID de usuario no disponible');
+  prevPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
     }
   }
 
@@ -50,6 +61,7 @@ export class MisreservasComponent implements OnInit {
     if (reservaData) {
       this.dataService.eliminarReserva(reservaData).then(() => {
         console.log('Reserva eliminada correctamente de la base de datos');
+        this.loadReservas(); // Refresh the list after deletion
       }).catch((error: any) => {
         console.error('Error al eliminar la reserva de la base de datos:', error);
       });
@@ -58,4 +70,3 @@ export class MisreservasComponent implements OnInit {
     }
   }
 }
-
