@@ -94,6 +94,10 @@ selectMedicamento(medicamento: any) {
 
   
   async buscarMedicamento() { 
+    this.mensajeError = '';
+    this.mensajeDisponibilidad = '';
+    this.mostrarBotonesNotificacionYPuntos = false;
+
     if (!this.nmedicamento || !this.entidad || !this.direccionSeleccionada || !this.ciudad || !this.cantidad) {
       this.mensajeError = 'Todos los campos deben estar llenos.';
       console.log('Todos los campos deben estar llenos.');

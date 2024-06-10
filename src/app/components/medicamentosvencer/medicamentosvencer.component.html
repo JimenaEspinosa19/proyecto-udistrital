@@ -1,34 +1,39 @@
-<!-- medicamentosvencer.component.html -->
-
 <div class="content mat-elevation-z8" style="color: rgb(4, 4, 4); background-color: #f6eeee;">
-  <div class="max-w-7xl mx-auto bg-white p-6 shadow-md rounded-md">
+    <div class="max-w-5xl mx-auto bg-white p-6 shadow-md rounded-md text-lg">
       <h2 class="text-xl font-semibold mb-4">Medicamentos Registrados</h2>
-
-      <table class="w-full divide-y divide-gray-200 text-lg">
-          <thead class="bg-gray-50">
+      
+  
+        <div class="table-responsive">
+          <table class="w-full text-base">
+            <thead class="bg-gray-50">
               <tr>
-                  <th scope="col" class="px-6 py-3 text-left font-light text-gray-700 uppercase tracking-wider">Nombre</th>
-                  <th scope="col" class="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Cantidad</th>
-                  <th scope="col" class="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Fecha de vencimiento</th>
-                  <th scope="col" class="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Teléfono</th>
-                  <th scope="col" class="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Acciones</th>
+                <th class="px-4 py-2 text-left font-light text-gray-700 uppercase tracking-wider">Nombre</th>
+                <th class="px-4 py-2 text-left font-medium text-gray-700 uppercase tracking-wider">Cantidad</th>
+                <th class="px-4 py-2 text-left font-medium text-gray-700 uppercase tracking-wider">Vencimiento</th>
+                <th class="px-4 py-2 text-left font-medium text-gray-700 uppercase tracking-wider">Teléfono</th>
+                <th class="px-4 py-2 text-left font-medium text-gray-700 uppercase tracking-wider">Acciones</th>
               </tr>
-          </thead>
-          <tbody>
-              <tr *ngFor="let medicamento of medicamentos">
-                  <td class="px-6 py-4 whitespace-nowrap text-base" data-label="Nombre">{{ medicamento.nombre }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-base" data-label="Cantidad">{{ medicamento.cantidad }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-base" data-label="Fecha de vencimiento">{{ medicamento.fechaVencimiento }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-base" data-label="Teléfono">{{ medicamento.telefono }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-base" data-label="Acciones">
-                      <button class="bg-blue-600 text-white px-4 py-1 rounded-md text-sm" (click)="EliminarMedicamento(medicamento)" (click)="EnviarCorreo(medicamento) ">Reservar</button>
-                  </td>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr *ngFor="let medicamento of medicamentosFiltrados | slice:(currentPage-1)*itemsPerPage:(currentPage)*itemsPerPage">
+                <td class="px-4 py-2 whitespace-nowrap" data-label="Nombre">{{ medicamento.nombre }}</td>
+                <td class="px-4 py-2 whitespace-nowrap" data-label="Cantidad">{{ medicamento.cantidad }}</td>
+                <td class="px-4 py-2 whitespace-nowrap" data-label="Vencimiento">{{ medicamento.fechaVencimiento }}</td>
+                <td class="px-4 py-2 whitespace-nowrap" data-label="Teléfono">{{ medicamento.telefono }}</td>
+                <td class="px-4 py-2 whitespace-nowrap" data-label="Acciones">
+                  <button class="bg-blue-600 text-white px-4 py-1 rounded-md text-sm" (click)="EliminarMedicamento(medicamento); EnviarCorreo(medicamento)">Reservar</button>
+                </td>
               </tr>
-          </tbody>
-      </table>
-      <button (click)="volverAMedicamentos()" class="bg-blue-600 text-white px-3 py-2 rounded-md text-sm flex justify-center">
-        Volver
-      </button>
-
-  </div>
-</div>
+            </tbody>
+          </table>
+        </div>
+  
+        <div class="flex justify-between items-center mt-4">
+            <button class="px-2 py-1 bg-gray-200 text-sm rounded-md mr-2" (click)="prevPage()" [disabled]="currentPage === 1">Anterior</button>
+            <span class="text-sm">Página {{currentPage}} de {{totalPages}}</span>
+            <button class="px-2 py-1 bg-gray-200 text-sm rounded-md" (click)="nextPage()" [disabled]="currentPage === totalPages">Siguiente</button>
+          </div>
+          
+          <button (click)="volverAMedicamentos()" class="bg-blue-600 text-white px-3 py-2 rounded-md text-sm mt-4 flex justify-center">
+            Volver
+          </button>

@@ -239,7 +239,6 @@ async addMedicament(Nombre: string, cantidad: string, entidad: string) {
 
   const direccion = this.direccionSeleccionada;
   const medicamentos = await this.dataService.getMedicamentosTodos();
-
   let medicamentoExistente = medicamentos.find(medicamento =>
       medicamento['nmedicamento'] === Nombre &&
       medicamento['direcciones'].includes(this.direccionSeleccionada) &&
@@ -247,13 +246,15 @@ async addMedicament(Nombre: string, cantidad: string, entidad: string) {
       medicamento['ciudad'] === this.ciudad
   );
 
+  let cantidadTotal = 0;
   if (medicamentoExistente) {
-      medicamentoExistente['cantidad'] = parseInt(medicamentoExistente['cantidad']) + parseInt(cantidad);
+      cantidadTotal = parseInt(medicamentoExistente['cantidad']) + parseInt(cantidad);
       await this.dataService.updateMedicament(medicamentoExistente);
-      this.mensaje = `Se agregaron ${cantidad} medicamentos al existente. Total: ${medicamentoExistente['cantidad']}`;
+      this.mensaje = `Se agregaron ${cantidad} medicamentos al existente. Total: ${cantidadTotal}`;
   } else {
       await this.dataService.createmedicament(Nombre, cantidad, [this.direccionSeleccionada], entidad, this.ciudad);
       this.mensaje = "Medicamento ingresado correctamente.";
+      cantidadTotal = parseInt(cantidad);
   }
 
   try {
@@ -265,13 +266,12 @@ async addMedicament(Nombre: string, cantidad: string, entidad: string) {
           notificacion['direccionSeleccionada'] === this.direccionSeleccionada &&
           notificacion['entidad'] === entidad &&
           notificacion['ciudad'] === this.ciudad &&
-          parseInt(cantidad) >= parseInt(notificacion['cantidad'])
+          cantidadTotal >= parseInt(notificacion['cantidad'])
       );
 
       if (notificacionExistente) {
-        
-          const asunto = 'Tu medicamento ya está disponible en dispenAPP';
-          const cuerpo = `Tu medicamento ${Nombre} ya está disponible en ${entidad}, dirección ${this.direccionSeleccionada}. Reserva en DispenAPP antes de que se agote nuevamente.`;
+          const asunto = '¡Tu medicamento está disponible en DispenAPP!';
+          const cuerpo = `Estimado/a Usuario/a,\n\nTu medicamento ${Nombre} ya está disponible en ${entidad}, dirección ${this.direccionSeleccionada}.\n\nReserva en DispenAPP antes de que se agote nuevamente.\n\n¡Gracias por usar DispenAPP!\n\nAtentamente,\nEl equipo de DispenAPP`;
           const correodata = {
               to: this.userEmail,
               subject: asunto,
@@ -284,12 +284,14 @@ async addMedicament(Nombre: string, cantidad: string, entidad: string) {
                       console.log('Correo enviado', response);
                       this.mensaje = "Medicamento ingresado correctamente.";
 
-                    
-                      this.dataService.eliminarNotificacion(notificacionExistente).then(() => {
-                         console.log('Notificación eliminada después de enviar el correo.');
-                      }).catch(error => {
-                          console.log('Error al eliminar la notificación:', error);
-                      });
+                      // Eliminar la notificación después de enviar el correo
+                      this.dataService.eliminarNotificacion(notificacionExistente)
+                          .then(() => {
+                              console.log('Notificación eliminada después de enviar el correo.');
+                          })
+                          .catch(error => {
+                              console.log('Error al eliminar la notificación:', error);
+                          });
                   },
                   error => {
                       console.log('Error al enviar correo', error);
@@ -303,7 +305,8 @@ async addMedicament(Nombre: string, cantidad: string, entidad: string) {
       console.log('Error al obtener las notificaciones', error);
       this.mensaje = "Error al obtener las notificaciones.";
   }
-} 
+}
+
 
 
 async actualizarDireccionesPorEntidadYCiudad(entidad: string, ciudad: string) {

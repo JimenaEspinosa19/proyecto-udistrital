@@ -18,15 +18,17 @@
             text-align: center;
         }
 
-
         .content-container {
             padding: 20px;
             background-color: #f3ecec;
-            height: calc(100vh - 100px);
+            min-height: 100vh; /* Ensure the background covers the whole page */
             border-radius: 10px;
             margin: 16px;
             margin-left: 32px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .info-box {
@@ -35,6 +37,8 @@
             border-radius: 5px;
             margin-bottom: 20px;
             padding: 20px;
+            max-width: 800px; /* Optional: Limit the max width of the info boxes */
+            width: 100%; /* Make sure the box takes full width available */
         }
 
         .info-box h2 {
@@ -54,13 +58,18 @@
         @media only screen and (max-width: 600px) {
             .info-box {
                 margin-bottom: 10px;
+                margin-left: 16px;
+                margin-right: 16px;
+            }
+            .content-container {
+                margin: 16px;
             }
         }
     </style>
 </head>
 <body>
 
-    <div class="content-container mat-elevation-z8" style="color: rgb(4, 4, 4); background-color: #f6eeee;">
+    <div class="content-container mat-elevation-z8">
         <div class="info-box">
             <h2>¿Quiénes somos?</h2>
             <p>Somos una plataforma dedicada a proporcionar un acceso rápido y seguro a medicamentos y servicios de salud.</p>

@@ -89,7 +89,7 @@ async reservarMedicamento() {
   const mensajeAnterior = this.mensajeDisponibilidad;
   this.mensajeDisponibilidad = '';
 
-  // Verificar si algún campo está vacío
+ 
   if (!this.nombreCliente || !this.identificacion || !this.nmedicamento || !this.cantidad || !this.entidad || !this.direccionSeleccionada || !this.fechaReserva || !this.horaReserva) {
     this.mensajeDisponibilidad = "Por favor, completa todos los campos antes de realizar la reserva.";
     return;
@@ -97,7 +97,7 @@ async reservarMedicamento() {
 
   if (this.userID !== null) {
     try {
-      // Consultar la base de datos para verificar si hay una reserva con la misma fecha y hora
+     
       const reservaExistente = await this.dataService.obtenerReservaExistente(this.fechaReserva, this.horaReserva);
       
       if (reservaExistente) {
@@ -105,7 +105,6 @@ async reservarMedicamento() {
         return;
       }
 
-      // Si no hay una reserva existente, proceder con la reserva
       await this.dataService.crearReservaMedicamento(
         this.nombreCliente,
         this.identificacion,
@@ -119,6 +118,7 @@ async reservarMedicamento() {
       );
 
       this.mensajeDisponibilidad = "Medicamento reservado con éxito";
+      await this.Modificar();
     } catch (error) {
       console.error('Error al reservar el medicamento:', error);
       this.mensajeDisponibilidad = "Ocurrió un error al reservar el medicamento";
@@ -130,7 +130,7 @@ async reservarMedicamento() {
 }
 async EnviarCorreo(){
   const asunto= 'Medicamento en DispenAPP quedó reservado'
-  const cuerpo = `Se informa que tu medicamento ${this.nmedicamento} quedó reservado exitosamente. A continuación los datos de tu reserva \n'
+  const cuerpo = `Estimado/a Usuario/a \n\n Se informa que tu medicamento ${this.nmedicamento} quedó reservado exitosamente. A continuación los datos de tu reserva \n'
   'Nombre del medicamento: ${this.nmedicamento} \n Cantidad: ${this.cantidad} \n Entidad: ${this.entidad} \n Dirección ${this.direccionSeleccionada}\n Fecha Reserva: ${this.fechaReserva}\n Hora reserva: ${this.horaReserva}\n`
 
   
@@ -157,4 +157,18 @@ async EnviarCorreo(){
 volverAMedicamentos() {
   this.router.navigate(['/medicamentos']);
 }
+
+async Modificar() {
+ 
+  await this.dataService.modificarCantidadMedicamentoReserva(
+    this.nmedicamento,
+    this.entidad,
+    this.direccionSeleccionada,
+    parseInt(this.cantidad, 10) 
+    
+  );
+  this.mensajeDisponibilidad = 'El medicamento fue modificado correctamente';
+}
+
+
 }

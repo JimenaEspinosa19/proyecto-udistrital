@@ -459,7 +459,38 @@ async getPacientes() {
       console.error('Error al modificar la cantidad:', error);
     }
   }
-
+  async modificarCantidadMedicamentoReserva(nmedicamento: string, entidad: string, direccionSeleccionada: string, nuevaCantidad: number) {
+    try {
+      console.log("nmedicamento:", nmedicamento);
+      console.log("entidad:", entidad);
+      console.log("direccionSeleccionada:", direccionSeleccionada); 
+      console.log("nuevaCantidad:", nuevaCantidad);
+  
+      const q = query(
+        collection(this.firestore, 'Medicamentos'), 
+        where('nmedicamento', '==', nmedicamento),
+        where('entidad', '==', entidad),
+        where('direcciones', 'array-contains', direccionSeleccionada) 
+      );
+  
+      const querySnapshot = await getDocs(q);
+      console.log("querySnapshot:", querySnapshot);
+  
+      if (!querySnapshot.empty) {
+        const docRef = querySnapshot.docs[0].ref;
+        const medicamentoActual = querySnapshot.docs[0].data()['cantidad'];
+        const cantidadActualizada = medicamentoActual - nuevaCantidad;
+        
+        await setDoc(docRef, { cantidad: cantidadActualizada }, { merge: true });
+        console.log('Cantidad modificada en la base de datos.');
+      } else {
+        console.error('No se encontró ningún documento con los criterios especificados.');
+      }
+    } catch (error) {
+      console.error('Error al modificar la cantidad:', error);
+    }
+  }
+  
   async getNotificaciones() {
     const snapshot = await getDocs(query(collection(this.firestore, 'Notificaciones')));
     return snapshot.docs.map(doc => doc.data());
@@ -529,4 +560,5 @@ async getPacientes() {
         
     }
 }
+
 }

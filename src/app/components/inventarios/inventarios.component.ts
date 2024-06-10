@@ -15,14 +15,15 @@ export class InventariosComponent implements OnInit {
   currentPage: number = 1;
   itemsPerPage: number = 10;
   totalPages: number = 1;
-  loading: boolean = true; // Variable de estado de carga
-  userID: string | null = null; // Variable para almacenar el ID del usuario
+  loading: boolean = true;
+  userID: string | null = null;
 
   constructor(private dataService: DataService, private router: Router, private authService: AuthService) { }
 
   ngOnInit(): void {
-    this.loadUserID(); // Cargar el ID del usuario al inicializar el componente
+    this.loadUserID();
     this.cargarMedicamentos();
+    this.updateItemsPerPage(); // Actualiza items por página basado en tamaño de la pantalla
   }
 
   async loadUserID() {
@@ -44,7 +45,7 @@ export class InventariosComponent implements OnInit {
     } catch (error) {
       console.error("Error al cargar medicamentos:", error);
     } finally {
-      this.loading = false; // Datos cargados, ocultar el indicador de carga
+      this.loading = false;
     }
   }
 
@@ -53,7 +54,7 @@ export class InventariosComponent implements OnInit {
       medicamento.nmedicamento.toLowerCase().includes(this.terminoBusqueda.toLowerCase())
     );
     this.totalPages = Math.ceil(this.medicamentosFiltrados.length / this.itemsPerPage);
-    this.currentPage = 1; // Reset to first page after search
+    this.currentPage = 1;
   }
 
   prevPage() {
@@ -72,7 +73,7 @@ export class InventariosComponent implements OnInit {
     if (reservaData) {
       this.dataService.eliminarMedicamento(reservaData).then(() => {
         console.log('Medicamento eliminado correctamente');
-        this.cargarMedicamentos(); 
+        this.cargarMedicamentos();
       }).catch((error: any) => {
         console.error('Error al eliminar el medicamento:', error);
       });
@@ -85,5 +86,14 @@ export class InventariosComponent implements OnInit {
     this.dataService.setDatosCliente(nmedicamento, entidad, direccionSeleccionada, cantidad, ciudad);
     console.log("Datos del medicamento seleccionado:", nmedicamento, entidad, direccionSeleccionada, cantidad, ciudad);
     this.router.navigate(['/modificarinventario']);
+  }
+
+  updateItemsPerPage() {
+    if (window.innerWidth <= 600) {
+      this.itemsPerPage = 1; 
+    } else {
+      this.itemsPerPage = 10; 
+    }
+    this.totalPages = Math.ceil(this.medicamentosFiltrados.length / this.itemsPerPage);
   }
 }

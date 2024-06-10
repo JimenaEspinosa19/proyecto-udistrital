@@ -61,10 +61,25 @@ export class MisreservasComponent implements OnInit {
     if (reservaData) {
       this.dataService.eliminarReserva(reservaData).then(() => {
         console.log('Reserva eliminada correctamente de la base de datos');
-        this.loadReservas(); // Refresh the list after deletion
+        // Eliminar la reserva de la lista local
+        this.reservasFiltradas = this.reservasFiltradas.filter(reserva => reserva !== reservaData);
+        this.reservas = this.reservas.filter(reserva => reserva !== reservaData);
+        this.totalPages = Math.ceil(this.reservasFiltradas.length / this.itemsPerPage);
       }).catch((error: any) => {
         console.error('Error al eliminar la reserva de la base de datos:', error);
       });
+    } else {
+      console.error('Los datos de la reserva son undefined');
+    }
+  }
+
+  aceptarReserva(reservaData: any) {
+    if (reservaData) {
+    
+      console.log('Reserva aceptada:', reservaData);
+      this.reservasFiltradas = this.reservasFiltradas.filter(reserva => reserva !== reservaData);
+      this.reservas = this.reservas.filter(reserva => reserva !== reservaData);
+      this.totalPages = Math.ceil(this.reservasFiltradas.length / this.itemsPerPage);
     } else {
       console.error('Los datos de la reserva son undefined');
     }

@@ -1,6 +1,6 @@
 .mat-toolbar {
   background: #0d67cf;
-  color: #f3ecec;;
+  color: #f3ecec;
 }
 
 .mat-sidenav {
@@ -8,7 +8,7 @@
   width: 200px;
   border-right: none;
   background: #053c7a;
-  color: #f3ecec;;
+  color: #f3ecec;
   border-radius: 10px;
   padding: 16px;
   text-align: center;
@@ -39,7 +39,7 @@
 }
 
 .max-w-5xl {
-  max-width: 80vw; 
+  max-width: 80vw;
 }
 
 .table-responsive {
@@ -52,10 +52,10 @@
 
 .table-responsive th,
 .table-responsive td {
-  padding: 0.5rem; 
+  padding: 0.5rem;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 600px) {
   .table-responsive table,
   .table-responsive thead,
   .table-responsive tbody,
@@ -73,6 +73,7 @@
 
   .table-responsive tr {
     border: 1px solid #ddd;
+    margin-bottom: 10px; /* Añade margen inferior entre las filas */
   }
 
   .table-responsive td {
@@ -82,6 +83,7 @@
     padding-left: 50%;
     white-space: normal;
     text-align: left;
+    word-wrap: break-word; 
   }
 
   .table-responsive td:before {

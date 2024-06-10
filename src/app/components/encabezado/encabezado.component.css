@@ -96,12 +96,10 @@ mat-toolbar {
 
       .nav-item {
         margin-right: 10px;
-      }
+      } 
 
       .avatar-container {
         display: flex;
-        justify-content: center; /* Centra horizontalmente */
-        align-items: center; /* Centra verticalmente */
-        height: 20%; /* Ajusta la altura del contenedor */
-      }
-      
+        justify-content: center; 
+        align-items: center; 
+        height: 20%; }
