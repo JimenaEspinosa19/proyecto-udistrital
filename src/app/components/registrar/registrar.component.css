@@ -115,7 +115,14 @@ button:hover {
 #mensaje {
   max-width: 300px;
   overflow-wrap: break-word;
-  color: black;
+  color: #00376d;
+  justify-content: center; 
+  align-items: center; 
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  margin: 0 auto; 
+  text-align: center;
 }
 
 .autocomplete-options {
