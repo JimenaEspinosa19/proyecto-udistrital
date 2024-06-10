@@ -38,6 +38,8 @@ export class LoginComponent {
     // Generar un código de verificación temporal
     this.verificationCode = this.generateVerificationCode();
 
+    
+
     const asunto = 'Tu medicamento ya está disponible';
     const cuerpo = `El código de verificación de tu cuenta es: ${this.verificationCode}`;
     const correodata = {

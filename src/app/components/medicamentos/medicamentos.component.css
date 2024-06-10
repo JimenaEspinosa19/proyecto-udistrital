@@ -19,13 +19,45 @@ mat-sidenav {
   border-radius: 10px;
   margin: 16px;
   margin-left: 32px;
-
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: #f6eeee;
+}
 
-  font-size: 2rem;
-  color: rgb(62, 87, 227);
+
+.form-container {
+  max-width: 500px;
+  width: 100%;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h2 {
+  text-align: center;
+  color: black; 
+}
+
+label {
+  color: black; 
+
+input, select {
+  color: black; 
+}
+
+button {
+  background-color: #004a9f;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #003b7a;
 }
 
 .autocomplete-options {
@@ -44,24 +76,21 @@ mat-sidenav {
   background-color: #f0f0f0;
 }
 
-/* Media queries para pantallas más pequeñas */
+
 @media (max-width: 768px) {
   .content {
-      margin: 8px;
-      font-size: 1.5rem;
+    margin: 8px;
+    font-size: 1rem;
   }
 
-
-  .max-w-md {
-      padding: 8px;
-      width: 100%; /* Asegurar que el contenedor no se salga del borde */
-      box-sizing: border-box; /* Incluir padding y borde dentro del ancho total */
+  .form-container {
+    padding: 8px;
+    width: 100%; 
+    box-sizing: border-box; 
   }
 
   button {
-      width: 100%;
-      margin-top: 8px;
+    width: 100%;
+    margin-top: 8px;
   }
-}
-
-
+}}
