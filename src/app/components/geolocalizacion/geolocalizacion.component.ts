@@ -1,4 +1,3 @@
-///<reference path="../../../../node_modules/@types/googlemaps/index.d.ts"/>
 import { HttpClient } from '@angular/common/http'; 
 import { HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
@@ -13,8 +12,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./geolocalizacion.component.css']
 })
 export class GeolocalizacionComponent {
-  directionsRenderers: google.maps.DirectionsRenderer[] = [];
-  publicRoutes: any[] = []; // Array to store public transport routes
+  directionsRenderer: google.maps.DirectionsRenderer | undefined;
 
   @ViewChild('divMap') divMap!: ElementRef;
   @ViewChild('inputPlaces') inputPlaces!: ElementRef;
@@ -29,7 +27,13 @@ export class GeolocalizacionComponent {
   transporteDuraciones: any[] = [];
   modoTransporte: string = 'DRIVING'; 
   posicionActual: any;
-  
+  directionRenderers: google.maps.DirectionsRenderer[] = [];
+  distanciasTiempo: { distancia: string, tiempoEstimado: string }[] = [];
+  routeMarkers: google.maps.Marker[] = [];
+  nuevosMarcadores!: google.maps.Marker[];
+  selectedRouteRenderer: google.maps.DirectionsRenderer | undefined;
+  routeMarkersWithNumbers: google.maps.Marker[] = [];
+
   constructor(private renderer: Renderer2, private route: ActivatedRoute, private router: Router) {
     this.markers = [];
   }
@@ -58,39 +62,54 @@ export class GeolocalizacionComponent {
 
   onSubmit() {
     console.log("Datos del formulario: ", this.formMapas.value)
-  };
+  }
 
   mapRuta(): void {
     this.limpiarMapa();
 
     const directionService = new google.maps.DirectionsService();
-    
+    const directionRender = new google.maps.DirectionsRenderer();
+    directionRender.setMap(this.mapa);
+
+    this.directionsRenderer = directionRender;
+
     directionService.route({
       origin: new google.maps.LatLng(this.posicionActual.coords.latitude, this.posicionActual.coords.longitude),
       destination: this.direccionRecibida,
-      travelMode: this.modoTransporte as google.maps.TravelMode 
+      travelMode: this.modoTransporte as google.maps.TravelMode, 
+      provideRouteAlternatives: true
     }, (resultado, estado) => {
-      if (estado === google.maps.DirectionsStatus.OK && resultado.routes && resultado.routes.length > 0) {
+      if (estado === google.maps.DirectionsStatus.OK && resultado.routes && resultado.routes.length > 0 && resultado.routes[0].legs && resultado.routes[0].legs.length > 0) {
         console.log(resultado);
-        this.publicRoutes = resultado.routes; // Store the routes for displaying in the list
+        this.distanciasTiempo = [];
+        this.nuevosMarcadores = []; 
+        for (let i = 0; i < resultado.routes.length; i++) {
+          const route = resultado.routes[i];
+          const dt = {
+            distancia: route.legs[0].distance.text,
+            tiempoEstimado: route.legs[0].duration.text
+          };
+          this.distanciasTiempo.push(dt);
 
-        // Iterar sobre todas las rutas encontradas
-        resultado.routes.forEach((route, index) => {
-          const directionRender = new google.maps.DirectionsRenderer({
-            map: this.mapa,
-            directions: resultado,
-            routeIndex: index
+          const routeRender = new google.maps.DirectionsRenderer();
+       
+          this.directionRenderers.push(routeRender);
+          routeRender.setMap(this.mapa);
+          routeRender.setDirections(resultado);
+          routeRender.setRouteIndex(i);
+
+          const middleIndex = Math.floor(route.overview_path.length / 2);
+          const middlePoint = route.overview_path[middleIndex];
+          const marker = new google.maps.Marker({
+            position: middlePoint,
+            label: (i + 1).toString(), 
+            map: this.mapa
           });
+          this.nuevosMarcadores.push(marker); 
+        }
 
-          // Almacenar cada DirectionsRenderer creado
-          this.directionsRenderers.push(directionRender);
-
-          // Mostrar distancia y tiempo estimado solo para la primera ruta
-          if (index === 0 && route.legs && route.legs.length > 0) {
-            this.distancia = route.legs[0].distance.text;
-            this.tiempoEstimado = route.legs[0].duration.text;
-          }
-        });
+        this.distancia = resultado.routes[0].legs[0].distance.text;
+        this.tiempoEstimado = resultado.routes[0].legs[0].duration.text; 
       } else {
         console.error('No se pudo calcular la ruta:', estado);
       }
@@ -103,11 +122,33 @@ export class GeolocalizacionComponent {
     });
     this.markers = [];
 
-    // Limpiar todas las rutas anteriores
-    this.directionsRenderers.forEach(renderer => renderer.setMap(null));
-    this.directionsRenderers = [];
+    if (this.nuevosMarcadores) {
+      this.nuevosMarcadores.forEach(marker => {
+        marker.setMap(null);
+      });
+      this.nuevosMarcadores = [];
+    }
+
+    this.directionRenderers.forEach(renderer => {
+      renderer.setMap(null);
+    });
+    this.directionRenderers = [];
+
+    if (this.directionsRenderer) {
+      this.directionsRenderer.setMap(null);
+    }
+
+    if (this.selectedRouteRenderer) {
+      this.selectedRouteRenderer.setMap(null);
+      this.selectedRouteRenderer = undefined;
+    }
+
+    this.routeMarkersWithNumbers.forEach(marker => {
+      marker.setMap(null);
+    });
+    this.routeMarkersWithNumbers = [];
   }
-  
+
   seleccionarModo(modo: string) {
     this.modoTransporte = modo;
     this.actualizarModoTransporte();
@@ -139,7 +180,7 @@ export class GeolocalizacionComponent {
         position: evento.latLng,
         animation: google.maps.Animation.DROP,
       });
-      marker.setDraggable(true)
+      marker.setDraggable(true);
       marker.setMap(this.mapa);
 
       google.maps.event.addListener(marker, 'click', (event) => { 
@@ -148,7 +189,53 @@ export class GeolocalizacionComponent {
     });
   }
 
-  volver(){
+  volver() {
     this.router.navigate(['/medicamentos']);
+  }
+
+  seleccionarRuta(index: number): void {
+    this.limpiarMapa();
+
+    const rutaSeleccionada = this.distanciasTiempo[index];
+
+    if (rutaSeleccionada) {
+      const directionService = new google.maps.DirectionsService();
+      const directionRender = new google.maps.DirectionsRenderer();
+      directionRender.setMap(this.mapa);
+
+      directionService.route({
+        origin: new google.maps.LatLng(this.posicionActual.coords.latitude, this.posicionActual.coords.longitude),
+        destination: this.direccionRecibida,
+        travelMode: this.modoTransporte as google.maps.TravelMode,
+        provideRouteAlternatives: true
+      }, (resultado, estado) => {
+        if (estado === google.maps.DirectionsStatus.OK) {
+          this.routeMarkers.forEach(marker => {
+            marker.setMap(null);
+          });
+          this.routeMarkers = [];
+
+          directionRender.setDirections(resultado);
+          directionRender.setRouteIndex(index);
+          this.selectedRouteRenderer = directionRender;
+
+          const route = resultado.routes[index];
+          if (route && route.legs && route.legs.length > 0) {
+            const middleIndex = Math.floor(route.overview_path.length / 2);
+            const middlePoint = route.overview_path[middleIndex];
+            const marker = new google.maps.Marker({
+              position: middlePoint,
+              label: (index + 1).toString(),
+              map: this.mapa
+            });
+            this.routeMarkers.push(marker);
+          }
+        } else {
+          console.error('No se pudo calcular la ruta:', estado);
+        }
+      });
+    } else {
+      console.error('No se encontró ninguna ruta para el índice proporcionado.');
+    }
   }
 }

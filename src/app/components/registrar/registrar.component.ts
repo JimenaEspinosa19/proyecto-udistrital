@@ -92,17 +92,19 @@ export class RegistrarComponent {
         return [];
     }
   
-    const MAX_MEDICAMENTOS = 3; 
+    const MAX_MEDICAMENTOS = 1; 
     const medicamentosFiltrados = this.opcionesMedicamentos.filter(option => option.Nombre.toLowerCase().includes(filterValue));
     return medicamentosFiltrados.slice(0, MAX_MEDICAMENTOS);
     
 }
 
-selectMedicamento(medicamento: any) {
-  this.Nombre = medicamento.Nombre;
-  this.medicamentoControl.setValue(medicamento.Nombre, { emitEvent: false });
 
-}
+  selectMedicamento(medicamento: any) {
+    this.Nombre = medicamento.Nombre;
+    this.medicamentoControl.setValue(medicamento.Nombre, { emitEvent: false });
+    this.mostrarOpciones = false; 
+  }
+
 
 
   async buscarMedicamento() { 
@@ -164,7 +166,7 @@ selectMedicamento(medicamento: any) {
     if (this.ciudad) {
       this.epsSeleccionada = await this.dataService.getEPSByCiudad(this.ciudad);
       await this.onChangeEPS(this.epsSeleccionada[0]); 
-      await this.updateDireccionesFiltradas(); // Actualizar las direcciones filtradas
+      await this.updateDireccionesFiltradas(); 
     }
   }
   
@@ -267,6 +269,7 @@ async addMedicament(Nombre: string, cantidad: string, entidad: string) {
       );
 
       if (notificacionExistente) {
+        
           const asunto = 'Tu medicamento ya está disponible en dispenAPP';
           const cuerpo = `Tu medicamento ${Nombre} ya está disponible en ${entidad}, dirección ${this.direccionSeleccionada}. Reserva en DispenAPP antes de que se agote nuevamente.`;
           const correodata = {
@@ -280,6 +283,13 @@ async addMedicament(Nombre: string, cantidad: string, entidad: string) {
                   response => {
                       console.log('Correo enviado', response);
                       this.mensaje = "Medicamento ingresado correctamente.";
+
+                    
+                      this.dataService.eliminarNotificacion(notificacionExistente).then(() => {
+                         console.log('Notificación eliminada después de enviar el correo.');
+                      }).catch(error => {
+                          console.log('Error al eliminar la notificación:', error);
+                      });
                   },
                   error => {
                       console.log('Error al enviar correo', error);
@@ -293,9 +303,8 @@ async addMedicament(Nombre: string, cantidad: string, entidad: string) {
       console.log('Error al obtener las notificaciones', error);
       this.mensaje = "Error al obtener las notificaciones.";
   }
-}
+} 
 
-    
 
 async actualizarDireccionesPorEntidadYCiudad(entidad: string, ciudad: string) {
   const direcciones = await this.dataService.getDireccionesPorEntidadYCiudad(entidad, ciudad);

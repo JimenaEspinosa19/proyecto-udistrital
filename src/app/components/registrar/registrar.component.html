@@ -5,15 +5,14 @@
       <div>
         <label for="medicamentoInput">Medicamento:</label>
         <input [(ngModel)]="nmedicamento" type="text" id="medicamentoInput" [formControl]="medicamentoControl">
-        <div class="autocomplete-options" *ngIf="medicamentosFiltrados | async as filteredMedicamentos">
+        <div class="autocomplete-options" *ngIf="mostrarOpciones && (medicamentosFiltrados | async) as filteredMedicamentos">
           <ul class="autocomplete-options">
             <li class="autocomplete-option" *ngFor="let medicamento of filteredMedicamentos" (click)="selectMedicamento(medicamento)">
               {{ medicamento.Nombre }}
             </li>
           </ul>
         </div>
-      </div>
-      <div>
+      
         <label for="cantidad">Cantidad:</label>
         <input name="cantidad" [(ngModel)]="cantidad" type="number" id="cantidad">
       </div>

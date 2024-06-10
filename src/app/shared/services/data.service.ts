@@ -485,11 +485,48 @@ async getPacientes() {
         where('horaReserva', '==', horaReserva)
       ));
       
-      return !snapshot.empty; // Retorna verdadero si se encontró al menos una reserva existente
+      return !snapshot.empty; 
     } catch (error) {
       console.error('Error al obtener la reserva existente:', error);
-      throw error; // Lanza el error para que sea manejado por el componente
+      throw error; 
     }
   }
 
+  async eliminarNotificacion(notificacionData: any): Promise<void> {
+    try {
+        console.log('Datos de la notificación a eliminar:', notificacionData);
+
+        
+        if (
+  
+            notificacionData.entidad === undefined ||
+            notificacionData.direccionSeleccionada === undefined ||
+            notificacionData.identificacion === undefined ||
+            notificacionData.nmedicamento === undefined
+        ) {
+            throw new Error('Los campos de notificacionData no pueden ser undefined.');
+        }
+
+        const querySnapshot = await getDocs(
+            query(collection(this.firestore, 'Notificaciones'), 
+            
+                where('entidad', '==', notificacionData.entidad),
+                where('direccionSeleccionada', '==', notificacionData.direccionSeleccionada),
+                where('identificacion', '==', notificacionData.identificacion),
+                where('nmedicamento', '==', notificacionData.nmedicamento)
+            )
+        );
+
+        console.log('Datos de las notificaciones encontradas:', querySnapshot.docs.map(doc => doc.data()));
+
+      
+        querySnapshot.forEach(doc => {
+            deleteDoc(doc.ref);
+        });
+
+        console.log('Notificación eliminada correctamente de la base de datos');
+    } catch (error) {
+        
+    }
+}
 }

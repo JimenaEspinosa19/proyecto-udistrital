@@ -34,6 +34,7 @@ export class MedicamentosComponent implements OnInit {
   epsSeleccionada: string[] = [];
   direccionesFiltradas: string[] = [];
   mostrarBotonesNotificacionYPuntos: boolean = false;
+  mostrarOpciones: boolean = true;
   
   medicamentosFiltrados!: Observable<any[]>;
   entidadesDirecciones: { [entidad: string]: string[] } = {};
@@ -78,20 +79,18 @@ export class MedicamentosComponent implements OnInit {
     if (!filterValue || !this.opcionesMedicamentos) {      
         return [];
     }  
-    const MAX_MEDICAMENTOS = 3; 
+    const MAX_MEDICAMENTOS = 1; 
     const medicamentosFiltrados = this.opcionesMedicamentos.filter(option => option.Nombre.toLowerCase().includes(filterValue));
    
     return medicamentosFiltrados.slice(0, MAX_MEDICAMENTOS); 
 }
 
+selectMedicamento(medicamento: any) {
+  this.Nombre = medicamento.Nombre;
+  this.medicamentoControl.setValue(medicamento.Nombre, { emitEvent: false });
+  this.mostrarOpciones = false; 
+}
 
-  selectMedicamento(medicamento: any) {
-    this.Nombre = medicamento.Nombre; 
-    this.medicamentoControl.setValue(medicamento.Nombre); 
-    
-
-
-  }
 
   
   async buscarMedicamento() { 

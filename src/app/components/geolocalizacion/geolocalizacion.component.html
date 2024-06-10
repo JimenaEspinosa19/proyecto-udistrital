@@ -1,19 +1,52 @@
+<style>
+    table {
+        border-collapse: collapse;
+        width: 30%;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 1px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+
 <div class="content mat-elevation-z8" style="color: rgb(4, 4, 4); background-color: #f3ecec;">
     <div class="content mat-elevation-z8">
         <h1>Valida rutas y tiempo estimado de tu viaje</h1>
 
         <button class="boton-azul" (click)="mapRuta()">Calcular ruta</button>
         <button class="boton-azul" (click)="volver()">Volver</button>
-        <div>
-            <p>Distancia: {{ distancia }}</p>
-            <p>Tiempo estimado: {{ tiempoEstimado }}</p>
-          </div>
+        
+    
+        <div *ngIf="distanciasTiempo && distanciasTiempo.length > 0">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">Ruta</th> 
+                        <th style="width: 20%;">Distancia</th> 
+                        <th style="width: 20%;">Tiempo estimado</th> 
+                  
+                    </tr>
+                </thead>
+                <tbody>
+                        <tr *ngFor="let dt of distanciasTiempo; let i = index">
+                            <td>{{ i + 1 }}</td>
+                            <td>{{ dt.distancia }}</td>
+                            <td>{{ dt.tiempoEstimado }}</td>
+                            <td><button type="button"  class="boton-azul" (click)="seleccionarRuta(i)">Seleccionar</button></td>
+                        </tr>
+                </tbody>
+            </table>
+        </div>
 
         <div class="formulario">
             <form (ngSubmit)="onSubmit()">
                 <div class="form panel">
-                    
-
                     <div>
                         <button type="button" class="boton-azul" (click)="seleccionarModo('DRIVING')">
                             <mat-icon>directions_car</mat-icon>
@@ -25,12 +58,9 @@
                             <mat-icon>directions_transit</mat-icon>
                         </button>
                     </div>
-                
                 </div>
-
                 <div class="mapa" #divMap></div>
             </form>
         </div>
-
     </div>
 </div>
