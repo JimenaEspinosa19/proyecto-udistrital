@@ -192,7 +192,7 @@ export class GeolocalizacionPuntosComponent {
   }
 
   volver() {
-    this.router.navigate(['/medicamentos']);
+    this.router.navigate(['/otrospuntos']);
   }
 
   seleccionarRuta(index: number): void {
