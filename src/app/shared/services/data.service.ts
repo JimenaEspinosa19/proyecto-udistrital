@@ -122,41 +122,43 @@ export class DataService {
     }
   }
 
-  async updateMedicament(medicamento: any) {
+  async updateMedicament(medicamento: any, nuevaCantidad: number) {
     try {
-      console.log("Nombre:", medicamento.nmedicamento);
-      console.log("Entidad:", medicamento.entidad);
-      console.log("Dirección seleccionada:", medicamento.direcciones);
-     
-      if (!medicamento.nmedicamento || !medicamento.entidad || !medicamento.direcciones) {
-        console.error("Los campos Nombre, entidad o direccionSeleccionada no están definidos.");
-        return;
-      }
-       
-      console.log("Nombre:", medicamento.nmedicamento);
+        console.log("Nombre:", medicamento.nmedicamento);
+        console.log("Entidad:", medicamento.entidad);
+        console.log("Dirección seleccionada:", medicamento.direcciones);
 
-      const querySnapshot = await getDocs(query(collection(this.firestore, 'Medicamentos'), 
-      where('nmedicamento', '==', medicamento.nmedicamento),
-      where('entidad', '==', medicamento.entidad),
-      where('ciudad', '==', medicamento.ciudad),
-      where('direcciones', 'array-contains', medicamento.direcciones[0])
-  ));
-  
-  if (!querySnapshot.empty) {
-      const docRef = querySnapshot.docs[0].ref;
-      await setDoc(docRef, medicamento, { merge: true });
-   
-      console.log("Medicamento actualizado con éxito en Firestore.");
-  } else {
-    
-      console.log("No se encontró el medicamento en Firestore para actualizar.");
-  }
+        if (!medicamento.nmedicamento || !medicamento.entidad || !medicamento.direcciones) {
+            console.error("Los campos Nombre, entidad o direccionSeleccionada no están definidos.");
+            return;
+        }
 
-} catch (error) {
-  console.error("Error al actualizar medicamento:", error);
-  throw error;
+        console.log("Nombre:", medicamento.nmedicamento);
+
+        const querySnapshot = await getDocs(query(collection(this.firestore, 'Medicamentos'),
+            where('nmedicamento', '==', medicamento.nmedicamento),
+            where('entidad', '==', medicamento.entidad),
+            where('ciudad', '==', medicamento.ciudad),
+            where('direcciones', 'array-contains', medicamento.direcciones[0])
+        ));
+
+        if (!querySnapshot.empty) {
+            const docRef = querySnapshot.docs[0].ref;
+            await updateDoc(docRef, {
+                cantidad: nuevaCantidad // Actualizar la cantidad con la nueva cantidad
+            });
+
+            console.log("Medicamento actualizado con éxito en Firestore.");
+        } else {
+            console.log("No se encontró el medicamento en Firestore para actualizar.");
+        }
+
+    } catch (error) {
+        console.error("Error al actualizar medicamento:", error);
+        throw error;
+    }
 }
-}
+
 
   async getEntidadesPorCiudad(ciudad: string): Promise<string[]> {
     const querySnapshot = await getDocs(query(collection(this.firestore, 'Farmacias'), where('Ciudad', '==', ciudad)));

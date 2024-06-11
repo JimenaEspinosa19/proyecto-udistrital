@@ -249,7 +249,7 @@ async addMedicament(Nombre: string, cantidad: string, entidad: string) {
   let cantidadTotal = 0;
   if (medicamentoExistente) {
     cantidadTotal = parseInt(medicamentoExistente['cantidad']) + parseInt(cantidad);
-    await this.dataService.updateMedicament(medicamentoExistente);
+    await this.dataService.updateMedicament(medicamentoExistente, cantidadTotal);
     this.mensaje = `Se agregaron ${cantidad} medicamentos al existente. Total: ${cantidadTotal}`;
   } else {
     await this.dataService.createmedicament(Nombre, cantidad, [this.direccionSeleccionada], entidad, this.ciudad);
