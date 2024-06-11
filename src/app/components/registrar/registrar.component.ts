@@ -233,81 +233,82 @@ async addMedicament(Nombre: string, cantidad: string, entidad: string) {
   console.log('Ciudad seleccionada:', this.ciudad);
 
   if (!Nombre || !cantidad || !this.direccionSeleccionada || !entidad || !this.ciudad) {
-      this.mensaje = "Por favor, complete todos los campos.";
-      return;
+    this.mensaje = "Por favor, complete todos los campos.";
+    return;
   }
 
   const direccion = this.direccionSeleccionada;
   const medicamentos = await this.dataService.getMedicamentosTodos();
   let medicamentoExistente = medicamentos.find(medicamento =>
-      medicamento['nmedicamento'] === Nombre &&
-      medicamento['direcciones'].includes(this.direccionSeleccionada) &&
-      medicamento['entidad'] === entidad &&
-      medicamento['ciudad'] === this.ciudad
+    medicamento['nmedicamento'] === Nombre &&
+    medicamento['direcciones'].includes(this.direccionSeleccionada) &&
+    medicamento['entidad'] === entidad &&
+    medicamento['ciudad'] === this.ciudad
   );
 
   let cantidadTotal = 0;
   if (medicamentoExistente) {
-      cantidadTotal = parseInt(medicamentoExistente['cantidad']) + parseInt(cantidad);
-      await this.dataService.updateMedicament(medicamentoExistente);
-      this.mensaje = `Se agregaron ${cantidad} medicamentos al existente. Total: ${cantidadTotal}`;
+    cantidadTotal = parseInt(medicamentoExistente['cantidad']) + parseInt(cantidad);
+    await this.dataService.updateMedicament(medicamentoExistente);
+    this.mensaje = `Se agregaron ${cantidad} medicamentos al existente. Total: ${cantidadTotal}`;
   } else {
-      await this.dataService.createmedicament(Nombre, cantidad, [this.direccionSeleccionada], entidad, this.ciudad);
-      this.mensaje = "Medicamento ingresado correctamente.";
-      cantidadTotal = parseInt(cantidad);
+    await this.dataService.createmedicament(Nombre, cantidad, [this.direccionSeleccionada], entidad, this.ciudad);
+    this.mensaje = "Medicamento ingresado correctamente.";
+    cantidadTotal = parseInt(cantidad);
   }
 
   try {
-      const notificaciones = await this.dataService.getNotificaciones();
-      console.log('Notificaciones:', notificaciones);
+    const notificaciones = await this.dataService.getNotificaciones();
+    console.log('Notificaciones:', notificaciones);
+    
 
-      const notificacionExistente = notificaciones.find(notificacion =>
-          notificacion['nmedicamento'] === Nombre &&
-          notificacion['direccionSeleccionada'] === this.direccionSeleccionada &&
-          notificacion['entidad'] === entidad &&
-          notificacion['ciudad'] === this.ciudad &&
-          cantidadTotal >= parseInt(notificacion['cantidad'])
-      );
+    const notificacionExistente = notificaciones.find(notificacion =>
+      notificacion['nmedicamento'] === Nombre &&
+      notificacion['direccionSeleccionada'] === this.direccionSeleccionada &&
+      notificacion['entidad'] === entidad &&
+      notificacion['ciudad'] === this.ciudad &&
+      cantidadTotal >= parseInt(notificacion['cantidad'])
+    );
 
-      if (notificacionExistente) {
-          const asunto = '¡Tu medicamento está disponible en DispenAPP!';
-          const cuerpo = `Estimado/a Usuario/a,\n\nTu medicamento ${Nombre} ya está disponible en ${entidad}, dirección ${this.direccionSeleccionada}.\n\nReserva en DispenAPP antes de que se agote nuevamente.\n\n¡Gracias por usar DispenAPP!\n\nAtentamente,\nEl equipo de DispenAPP`;
-          const correodata = {
-              to: this.userEmail,
-              subject: asunto,
-              message: cuerpo
-          };
+    if (notificacionExistente) {
 
-          this.http.post<any>('https://us-central1-proyecto-final-8e4e0.cloudfunctions.net/mailer', correodata)
-              .subscribe(
-                  response => {
-                      console.log('Correo enviado', response);
-                      this.mensaje = "Medicamento ingresado correctamente.";
+      console.log('Notificación existente:', notificacionExistente);
+      console.log('Correo electrónico del usuario:', notificacionExistente['userEmail']);
+      const asunto = '¡Tu medicamento está disponible en DispenAPP!';
+      const cuerpo = `Estimado/a Usuario/a,\n\nTu medicamento ${Nombre} ya está disponible en ${entidad}, dirección ${this.direccionSeleccionada}.\n\nReserva en DispenAPP antes de que se agote nuevamente.\n\n¡Gracias por usar DispenAPP!\n\nAtentamente,\nEl equipo de DispenAPP`;
+      const correodata = {
+        to: notificacionExistente['userEmail'], 
+        subject: asunto,
+        message: cuerpo
+      };
 
-                      // Eliminar la notificación después de enviar el correo
-                      this.dataService.eliminarNotificacion(notificacionExistente)
-                          .then(() => {
-                              console.log('Notificación eliminada después de enviar el correo.');
-                          })
-                          .catch(error => {
-                              console.log('Error al eliminar la notificación:', error);
-                          });
-                  },
-                  error => {
-                      console.log('Error al enviar correo', error);
-                      this.mensaje = "Error al enviar el correo de notificación.";
-                  }
-              );
-      } else {
-          console.log("No hay notificaciones para reportar.");
-      }
+      this.http.post<any>('https://us-central1-proyecto-final-8e4e0.cloudfunctions.net/mailer', correodata)
+        .subscribe(
+          response => {
+            console.log('Correo enviado', response);
+            this.mensaje = "Medicamento ingresado correctamente.";
+
+            this.dataService.eliminarNotificacion(notificacionExistente)
+              .then(() => {
+                console.log('Notificación eliminada después de enviar el correo.');
+              })
+              .catch(error => {
+                console.log('Error al eliminar la notificación:', error);
+              });
+          },
+          error => {
+            console.log('Error al enviar correo', error);
+            this.mensaje = "Error al enviar el correo de notificación.";
+          }
+        );
+    } else {
+      console.log("No hay notificaciones para reportar.");
+    }
   } catch (error) {
-      console.log('Error al obtener las notificaciones', error);
-      this.mensaje = "Error al obtener las notificaciones.";
+    console.log('Error al obtener las notificaciones', error);
+    this.mensaje = "Error al obtener las notificaciones.";
   }
 }
-
-
 
 async actualizarDireccionesPorEntidadYCiudad(entidad: string, ciudad: string) {
   const direcciones = await this.dataService.getDireccionesPorEntidadYCiudad(entidad, ciudad);
