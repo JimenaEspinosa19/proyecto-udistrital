@@ -73,7 +73,7 @@
 
   .table-responsive tr {
     border: 1px solid #ddd;
-    margin-bottom: 10px; /* Añade margen inferior entre las filas */
+    margin-bottom: 10px; 
   }
 
   .table-responsive td {

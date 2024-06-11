@@ -1,24 +1,27 @@
 <div class="content mat-elevation-z8" style="color: rgb(4, 4, 4); background-color: #f3ecec;">
-    <div class="max-w-8xl mx-auto bg-white p-6 shadow-md rounded-md">
-      <h2 class="text-xl font-semibold mb-4">Direcciones donde está disponible el medicamento</h2>
-      <table class="w-full divide-y divide-gray-200 text-lg">
+  <div class="max-w-full mx-auto bg-white p-6 shadow-md rounded-md text-lg">
+    <h2 class="text-xl font-semibold mb-4">Direcciones donde está disponible el medicamento</h2>
+    
+    <div class="table-responsive">
+      <table class="w-full text-base">
         <thead class="bg-gray-50">
           <tr>
-            <th scope="col" class="px-6 py-3 text-left font-light text-gray-700 uppercase tracking-wider">Dirección</th>
-            <th scope="col" class="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Medicamento</th>
-            <th scope="col" class="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Cantidad</th>
-            <th scope="col" class="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Ciudad</th>
-            <th scope="col" class="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Entidad</th>
-            <th scope="col" class="px-6 py-3"></th>
+            <th class="px-4 py-2 text-left font-light text-gray-700 uppercase tracking-wider" data-label="Dirección">Dirección</th>
+            <th class="px-4 py-2 text-left font-light text-gray-700 uppercase tracking-wider" data-label="Medicamento">Medicamento</th>
+            <th class="px-4 py-2 text-left font-light text-gray-700 uppercase tracking-wider" data-label="Cantidad">Cantidad</th>
+            <th class="px-4 py-2 text-left font-light text-gray-700 uppercase tracking-wider" data-label="Ciudad">Ciudad</th>
+            <th class="px-4 py-2 text-left font-light text-gray-700 uppercase tracking-wider" data-label="Entidad">Entidad</th>
+            <th class="px-6 py-3"></th>
           </tr>
         </thead>
+  
         <tbody class="bg-white divide-y divide-gray-200">
-          <tr *ngFor="let direccion of direccionesDisponibles">
-            <td class="px-6 py-4 whitespace-nowrap">{{ direccion.direccion }}</td>
-            <td class="px-6 py-4 whitespace-nowrap">{{ direccion.nmedicamento }}</td>
-            <td class="px-6 py-4 whitespace-nowrap">{{ direccion.cantidad }}</td>
-            <td class="px-6 py-4 whitespace-nowrap">{{ direccion.ciudad }}</td>
-            <td class="px-6 py-4 whitespace-nowrap">{{ direccion.entidad }}</td>
+          <tr *ngFor="let direccion of direccionesDisponibles.slice((currentPage-1)*itemsPerPage, (currentPage)*itemsPerPage); let i = index">
+            <td class="px-6 py-4 whitespace-nowrap" data-label="Dirección">{{ direccion.direccion }}</td>
+            <td class="px-6 py-4 whitespace-nowrap" data-label="Medicamento">{{ direccion.nmedicamento }}</td>
+            <td class="px-6 py-4 whitespace-nowrap" data-label="Cantidad">{{ direccion.cantidad }}</td>
+            <td class="px-6 py-4 whitespace-nowrap" data-label="Ciudad">{{ direccion.ciudad }}</td>
+            <td class="px-6 py-4 whitespace-nowrap" data-label="Entidad">{{ direccion.entidad }}</td>
             <td class="px-6 py-4 whitespace-nowrap">
               <button (click)="guardarDireccionSeleccionada(direccion)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                 Seleccionar
@@ -27,11 +30,18 @@
           </tr>
         </tbody>
       </table>
-      <br>
-      <br>
-      <button (click)="volverAMedicamentos()" class="bg-blue-600 text-white px-3 py-2 rounded-md text-sm flex justify-center">
-        Volver
-      </button>
     </div>
+    
+    <div class="flex justify-between items-center mt-4">
+      <button class="px-2 py-1 bg-gray-200 text-sm rounded-md" (click)="prevPage()" [disabled]="currentPage === 1">Anterior</button>
+      <span class="text-sm">Página {{currentPage}} de {{totalPages}}</span>
+      <button class="px-2 py-1 bg-gray-200 text-sm rounded-md" (click)="nextPage()" [disabled]="currentPage === totalPages">Siguiente</button>
+    </div>
+    
+    <br>
+    <br>
+    <button (click)="volverAMedicamentos()" class="bg-blue-600 text-white px-3 py-2 rounded-md text-sm flex justify-center">
+      Volver
+    </button>
   </div>
-  
+</div>

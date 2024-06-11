@@ -16,11 +16,16 @@ export class PuntoscercanosComponent implements OnInit {
   direccionSeleccionada: string = '';
   mensajeDisponibilidad: string = '';
   userEmail: string | null = '';
+  currentPage: number = 1;
+  itemsPerPage: number = 10;
+  totalPages: number = 1;
+  medicamentosFiltrados: any[] = [];
 
   constructor(private dataService: DataService, private router: Router) {}
 
   ngOnInit(): void {
     this.getPuntosCercanos();
+    this.updateItemsPerPage();
   }
 
   async getPuntosCercanos() {
@@ -55,6 +60,7 @@ export class PuntoscercanosComponent implements OnInit {
         });
   
         this.direccionesDisponibles = direccionesDisponibles;
+        this.updateItemsPerPage();
     } catch (error) {
         console.error('Error al obtener las direcciones disponibles:', error);
     }
@@ -77,5 +83,26 @@ export class PuntoscercanosComponent implements OnInit {
       console.log("No se ha seleccionado ninguna dirección.");
     }
   }
-  
+
+  updateItemsPerPage() {
+    if (window.innerWidth <= 600) {
+      this.itemsPerPage = 1; 
+    } else {
+      this.itemsPerPage = 5; 
+    }
+    this.totalPages = Math.ceil(this.medicamentosFiltrados.length / this.itemsPerPage);
+  }
+
+  prevPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
+  }
 }
+  
